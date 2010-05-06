@@ -28,7 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.refreshTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // refreshTimer
+            // 
+            this.refreshTimer.Tick += new System.EventHandler(this.RefreshTimerTick);
             // 
             // Main
             // 
@@ -42,6 +48,8 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer refreshTimer;
     }
 }
 

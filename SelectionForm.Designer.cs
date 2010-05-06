@@ -37,7 +37,7 @@
             this.sizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sizeBox.Location = new System.Drawing.Point(0, 0);
             this.sizeBox.Name = "sizeBox";
-            this.sizeBox.Size = new System.Drawing.Size(504, 404);
+            this.sizeBox.Size = new System.Drawing.Size(350, 362);
             this.sizeBox.TabIndex = 0;
             this.sizeBox.TabStop = false;
             // 
@@ -46,12 +46,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.ClientSize = new System.Drawing.Size(504, 404);
+            this.ClientSize = new System.Drawing.Size(350, 362);
             this.ControlBox = false;
             this.Controls.Add(this.sizeBox);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(520, 420);
+            this.MinimumSize = new System.Drawing.Size(366, 400);
             this.Name = "SelectionForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

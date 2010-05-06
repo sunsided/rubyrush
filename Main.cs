@@ -18,6 +18,8 @@ namespace Ruby_Rush
             _rubyRange.Move += RubyRange_Move;
             _rubyRange.SizeChanged += RubyRange_SizeChanged;
             _rubyRange.Shown += RubyRangeShown;
+
+            refreshTimer.Start();
         }
 
         /// <summary>
@@ -87,7 +89,8 @@ namespace Ruby_Rush
             int width = size.Width;
             int height = size.Height;
 
-            _rangeBitmap = CaptureScreen.GetDesktopImage(left, top, width, height);
+            Bitmap capture = CaptureScreen.GetDesktopImage(left, top, width, height);
+            _rangeBitmap = ImageFilter.FilterBitmap(capture);
         }
 
         /// <summary>
@@ -113,6 +116,16 @@ namespace Ruby_Rush
         {
             base.OnResize(e);
             Invalidate();
+        }
+
+        /// <summary>
+        /// Handles the Tick event of the refreshTimer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void RefreshTimerTick(object sender, System.EventArgs e)
+        {
+            StartActionCascade();
         }
     }
 }
