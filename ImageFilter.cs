@@ -28,21 +28,28 @@ namespace Ruby_Rush
             // Tatsächliche Breiten in Pixeln berechnen
             int pixelWidth = captureData.Width*3;
 
+            // Gesamtoffsets berechnen
+            byte* srcOffset = (byte*) captureData.Scan0.ToPointer();
+            byte* targetOffset = (byte*)targetData.Scan0.ToPointer();
+
             // Schleifen und Spaß haben
             for (int y = 0; y < captureData.Height; ++y )
             {
+                // Y-Offsets berechnen
+                int srcBase = y*captureData.Stride;
+                int targetBase = y * targetData.Stride;
+
+                // X-Position schleifen
                 for (int x = 0; x < pixelWidth; x+=3)
                 {
                     // auslesen ...
-                    int srcpos = y*captureData.Stride + x;
-                    byte* src = (byte*)captureData.Scan0.ToPointer() + srcpos;
+                    byte* src = srcOffset + srcBase + x;
                     byte red = *src;
                     byte green = *(src + 1);
                     byte blue = *(src + 2);
 
                     // ... und kopieren
-                    int targetpos = y * targetData.Stride + x;
-                    byte* target = (byte*)targetData.Scan0.ToPointer() + targetpos;
+                    byte* target = targetOffset + targetBase + x;
                     *target = red;
                     *(target + 1) = green;
                     *(target + 2) = blue;
