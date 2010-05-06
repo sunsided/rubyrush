@@ -1,5 +1,7 @@
 ﻿// ID $Id$
 
+using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -89,12 +91,17 @@ namespace Ruby_Rush
             int width = size.Width;
             int height = size.Height;
 
-            Bitmap capture = CaptureScreen.GetDesktopImage(left, top, width, height);
-            _rangeBitmap = ImageFilter.FilterBitmap(capture);
+            _rawCapture = CaptureScreen.GetDesktopImage(left, top, width, height);
+            _rangeBitmap = ImageFilter.FilterBitmap(_rawCapture);
         }
 
         /// <summary>
-        /// Das Range-Bitmap
+        /// Das Originalbild
+        /// </summary>
+        private Bitmap _rawCapture;
+
+        /// <summary>
+        /// Das gefilterte Bild
         /// </summary>
         private Bitmap _rangeBitmap;
 
@@ -126,6 +133,31 @@ namespace Ruby_Rush
         private void RefreshTimerTick(object sender, System.EventArgs e)
         {
             StartActionCascade();
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseMove"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            // Mausposition auf Bildgröße skalieren
+            int scaledX = e.X*_rangeBitmap.Width/ClientSize.Width;
+            int scaledY = e.Y*_rangeBitmap.Height/ClientSize.Height;
+
+            // Idiotentest
+            if (scaledX < 0 || scaledX >= _rangeBitmap.Width) return;
+            if (scaledY < 0 || scaledY >= _rangeBitmap.Height) return;
+
+            // Farbe ermitteln
+            Color color = _rawCapture.GetPixel(scaledX, scaledY);
+            int lightness = (color.R + color.G + color.B)/3;
+
+            // Farbe ausgeben
+            pictureBoxColor.BackColor = color;
+            labelColor.Text = String.Format("R: {0,-3} G: {1,-3} B: {2,-3}, Total: {3,-3}", color.R, color.G, color.B, lightness);
         }
     }
 }

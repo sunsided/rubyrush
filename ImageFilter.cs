@@ -44,15 +44,34 @@ namespace Ruby_Rush
                 {
                     // auslesen ...
                     byte* src = srcOffset + srcBase + x;
-                    byte red = *src;
+                    byte blue = *src;
                     byte green = *(src + 1);
-                    byte blue = *(src + 2);
+                    byte red = *(src + 2);
+
+                    // Farben diskretisieren
+                    int color = (red + green + blue)/3;
+                    if (color < 32)
+                    {
+                        red = green = blue = 0;
+                    }
+                    // grüner Stein
+                    else if (green > 100 && green > red && green > blue && red < 200 && blue < 210)
+                    {
+                        green = 255;
+                        red = 0;
+                        blue = 0;
+                    }
+                    // weißer Stein
+                    else if (color > 100 && (red == green) && (green == blue))
+                    {
+                        red = green = blue = 255;
+                    }
 
                     // ... und kopieren
                     byte* target = targetOffset + targetBase + x;
-                    *target = red;
+                    *target = blue;
                     *(target + 1) = green;
-                    *(target + 2) = blue;
+                    *(target + 2) = red;
                 }
             }
 
