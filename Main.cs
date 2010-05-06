@@ -17,6 +17,17 @@ namespace Ruby_Rush
 
             _rubyRange.Move += RubyRange_Move;
             _rubyRange.SizeChanged += RubyRange_SizeChanged;
+            _rubyRange.Shown += RubyRangeShown;
+        }
+
+        /// <summary>
+        /// Handles the Shown event of the _rubyRange control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        void RubyRangeShown(object sender, System.EventArgs e)
+        {
+            StartActionCascade();
         }
 
         /// <summary>
@@ -26,7 +37,7 @@ namespace Ruby_Rush
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void RubyRange_SizeChanged(object sender, System.EventArgs e)
         {
-            Invalidate();
+            StartActionCascade();
         }
 
         /// <summary>
@@ -36,7 +47,7 @@ namespace Ruby_Rush
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void RubyRange_Move(object sender, System.EventArgs e)
         {
-            Invalidate();
+            StartActionCascade();
         }
 
         /// <summary>
@@ -55,10 +66,18 @@ namespace Ruby_Rush
         }
 
         /// <summary>
-        /// Wird aufgerufen, wenn die Form gezeichnet wird
+        /// Tut Dinge.
         /// </summary>
-        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
-        protected override void OnPaint(PaintEventArgs e)
+        private void StartActionCascade()
+        {
+            GetRangeBitmap();
+            Invalidate();
+        }
+
+        /// <summary>
+        /// Holt die Range-Bitmap
+        /// </summary>
+        private void GetRangeBitmap()
         {
             Point topLeft = _rubyRange.FrameTopLeft;
             Size size = _rubyRange.FrameSize;
@@ -68,8 +87,32 @@ namespace Ruby_Rush
             int width = size.Width;
             int height = size.Height;
 
-            Bitmap bitmap = CaptureScreen.GetDesktopImage(left, top, width, height);
-            e.Graphics.DrawImage(bitmap, ClientRectangle);
+            _rangeBitmap = CaptureScreen.GetDesktopImage(left, top, width, height);
+        }
+
+        /// <summary>
+        /// Das Range-Bitmap
+        /// </summary>
+        private Bitmap _rangeBitmap;
+
+        /// <summary>
+        /// Wird aufgerufen, wenn die Form gezeichnet wird
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            if (_rangeBitmap == null) return;
+            e.Graphics.DrawImage(_rangeBitmap, ClientRectangle);
+        }
+
+        /// <summary>
+        /// Wird aufgerufen, wenn sich die Größe der Form ändert
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnResize(System.EventArgs e)
+        {
+            base.OnResize(e);
+            Invalidate();
         }
     }
 }
