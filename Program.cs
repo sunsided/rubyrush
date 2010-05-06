@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// ID $Id$
+
+using System;
 using System.Windows.Forms;
 
 namespace Ruby_Rush

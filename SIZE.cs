@@ -1,4 +1,6 @@
-﻿namespace Ruby_Rush
+﻿// ID $Id$
+
+namespace Ruby_Rush
 {
     internal struct SIZE
     {

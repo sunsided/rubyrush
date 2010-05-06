@@ -1,4 +1,6 @@
-﻿using System;
+﻿// ID $Id$
+
+using System;
 using System.Drawing;
 
 namespace Ruby_Rush
@@ -6,7 +8,13 @@ namespace Ruby_Rush
     internal static class CaptureScreen
     {
         #region Public Class Functions
+
         public static Bitmap GetDesktopImage(int maxWidth, int maxHeight)
+        {
+            return GetDesktopImage(0, 0, maxWidth, maxHeight);
+        }
+
+        public static Bitmap GetDesktopImage(int left, int top, int maxWidth, int maxHeight)
         {
             //In size variable we shall keep the size of the screen.
             SIZE size;
@@ -39,7 +47,7 @@ namespace Ruby_Rush
                 IntPtr hOld = PlatformInvokeGDI32.SelectObject(hMemDC, hBitmap);
 
                 //We copy the Bitmap to the memory device context.
-                PlatformInvokeGDI32.BitBlt(hMemDC, 0, 0, size.cx, size.cy, hDC, 0, 0, PlatformInvokeGDI32.SRCCOPY);
+                PlatformInvokeGDI32.BitBlt(hMemDC, 0, 0, size.cx, size.cy, hDC, left, top, PlatformInvokeGDI32.SRCCOPY);
 
                 //We select the old bitmap back to the memory device context.
                 PlatformInvokeGDI32.SelectObject(hMemDC, hOld);

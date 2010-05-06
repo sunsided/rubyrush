@@ -1,4 +1,6 @@
-﻿using System;
+﻿// ID $Id$
+
+using System;
 using System.Runtime.InteropServices;
 
 namespace Ruby_Rush
