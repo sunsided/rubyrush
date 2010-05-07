@@ -3,6 +3,8 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Ruby_Rush
@@ -75,6 +77,7 @@ namespace Ruby_Rush
         private void StartActionCascade()
         {
             GetRangeBitmap();
+            BuildMap();
             Invalidate();
         }
 
@@ -141,6 +144,41 @@ namespace Ruby_Rush
                     int y = _mouseDownLocation.Y + height * i;
                     gr.DrawLine(_gridPenSmall, _mouseDownLocation.X, y, _currentMouseLocation.X, y);
                 }
+            }
+            else if(_gridApplied)
+            {
+                float top = _topLeftItem.Y*(float) Height/_rawCapture.Height;
+                float left = _topLeftItem.X * (float)Width / _rawCapture.Width;
+
+                float width = Math.Abs(_bottomRightItem.X - _topLeftItem.X) * (float)Width / (_rawCapture.Width);
+                float height = Math.Abs(_bottomRightItem.Y - _topLeftItem.Y) * (float)Height / (_rawCapture.Height);
+
+                float widthSteps = width / 7.25F;
+                float heightSteps = height / 7.75F;
+
+                Graphics gr = e.Graphics;
+                gr.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Gray)), ClientRectangle);
+
+                const int size = 30;
+                const int halfSize = size/2;
+
+
+                for (int y = 0; y < 8; y++)
+                {
+                    float ypos = heightSteps * y + top;
+
+                    for (int x = 0; x < 8; x++)
+                    {
+                        float xpos = widthSteps * x + left;
+
+                        Color color = _colorMap[x, y];
+                        Brush brush = new SolidBrush(color);
+
+                        RectangleF rect = new RectangleF(xpos - halfSize, ypos - halfSize, size, size);
+                        gr.DrawEllipse(new Pen(Color.White, 2.0F), rect);
+                        gr.FillEllipse(brush, rect);
+                    }
+                } 
             }
         }
 
@@ -212,7 +250,7 @@ namespace Ruby_Rush
             int lightness = (color.R + color.G + color.B)/3;
 
             // Farbe ausgeben
-            pictureBoxColor.BackColor = color;
+            //pictureBoxColor.BackColor = color;
 
             int rPercent = 100*color.R/255;
             int gPercent = 100*color.G/255;
@@ -234,7 +272,9 @@ namespace Ruby_Rush
         {
             base.OnMouseDown(e);
             _inDragDrop = true;
+            _gridApplied = false;
             _mouseDownLocation = e.Location;
+            Invalidate();
         }
 
         /// <summary>
@@ -246,6 +286,69 @@ namespace Ruby_Rush
             base.OnMouseUp(e);
             _inDragDrop = false;
             _mouseUpLocation = e.Location;
+
+            if (_mouseDownLocation == _mouseUpLocation) return;
+
+            // Fragen!
+            if(DialogResult.Yes == MessageBox.Show(this, "Raster übernehmen?", "Feldraster", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
+            {
+                // TODO: na ja, oder andersrum ...
+                _topLeftItem = new Point(_mouseDownLocation.X * _rangeBitmap.Width / ClientSize.Width, _mouseDownLocation.Y * _rangeBitmap.Height / ClientSize.Height);
+                _bottomRightItem = new Point(_mouseUpLocation.X * _rangeBitmap.Width / ClientSize.Width, _mouseUpLocation.Y * _rangeBitmap.Height / ClientSize.Height);
+
+                _gridApplied = true;
+                BuildMap();
+            }
+        }
+
+        /// <summary>
+        /// Obere linke Ecke des ersten Elementes
+        /// </summary>
+        private Point _topLeftItem;
+
+        /// <summary>
+        /// Untere, rechte Ecke des Elementes
+        /// </summary>
+        private Point _bottomRightItem;
+
+        /// <summary>
+        /// Die Steinkarte
+        /// </summary>
+        private readonly Stone[,] _stoneMap = new Stone[8,8];
+
+        /// <summary>
+        /// Die Steinkarte (in Farbe)
+        /// </summary>
+        private readonly Color[,] _colorMap = new Color[8, 8];
+
+        /// <summary>
+        /// Gibt an, ob das Gitter angewandt wurde
+        /// </summary>
+        private bool _gridApplied = false;
+
+        /// <summary>
+        /// Die aktuelle Steinkarte
+        /// </summary>
+        private void BuildMap()
+        {
+            int width = Math.Abs(_bottomRightItem.X - _topLeftItem.X);
+            int height = Math.Abs(_bottomRightItem.Y - _topLeftItem.Y);
+
+            int widthSteps = width/7;
+            int heightSteps = height / 7;
+
+            // TODO: Parallelisieren; Image-Lock rausziehen
+            for(int y=0; y<8; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    int xpos = widthSteps*x + _topLeftItem.X;
+                    int ypos = heightSteps * y + _topLeftItem.Y;
+
+                    Color color = ImageFilter.SampleColor(/*_rangeBitmap*/ _rawCapture, xpos, ypos, 10);
+                    _colorMap[x, y] = color;
+                }
+            }            
         }
     }
 }
