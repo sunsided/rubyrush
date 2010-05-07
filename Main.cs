@@ -112,8 +112,47 @@ namespace Ruby_Rush
         protected override void OnPaint(PaintEventArgs e)
         {
             if (_rangeBitmap == null) return;
-            e.Graphics.DrawImage(_rangeBitmap, ClientRectangle);
+            e.Graphics.DrawImage(_rawCapture, ClientRectangle);
+
+            if (_inDragDrop)
+            {
+                Graphics gr = e.Graphics;
+
+                // Hauptgitter
+                gr.DrawLine(_gridPen, _mouseDownLocation.X, _mouseDownLocation.Y, _currentMouseLocation.X, _mouseDownLocation.Y);
+                gr.DrawLine(_gridPen, _mouseDownLocation.X, _mouseDownLocation.Y, _mouseDownLocation.X, _currentMouseLocation.Y);
+                gr.DrawLine(_gridPen, _currentMouseLocation.X, _mouseDownLocation.Y, _currentMouseLocation.X, _currentMouseLocation.Y);
+                gr.DrawLine(_gridPen, _mouseDownLocation.X, _currentMouseLocation.Y, _currentMouseLocation.X, _currentMouseLocation.Y);
+
+                const int elements = 7;
+
+                // Nebengitter: Horizontale Linien
+                int width = Math.Abs(_mouseDownLocation.X - _currentMouseLocation.X) / elements;
+                for (int i = 0; i < elements; ++i)
+                {
+                    int x = _mouseDownLocation.X + width*i;
+                    gr.DrawLine(_gridPenSmall, x, _mouseDownLocation.Y, x, _currentMouseLocation.Y);
+                }
+
+                // Nebengitter: Vertikale Linien
+                int height = Math.Abs(_mouseDownLocation.Y - _currentMouseLocation.Y) / elements;
+                for (int i = 0; i < elements; ++i)
+                {
+                    int y = _mouseDownLocation.Y + height * i;
+                    gr.DrawLine(_gridPenSmall, _mouseDownLocation.X, y, _currentMouseLocation.X, y);
+                }
+            }
         }
+
+        /// <summary>
+        /// Pen für das Hauptgitter
+        /// </summary>
+        private readonly Pen _gridPen = new Pen(Color.Red, 4.0f);
+
+        /// <summary>
+        /// Pen für das Hauptgitter
+        /// </summary>
+        private readonly Pen _gridPenSmall = new Pen(Color.Red, 2.0f);
 
         /// <summary>
         /// Wird aufgerufen, wenn sich die Größe der Form ändert
@@ -136,12 +175,29 @@ namespace Ruby_Rush
         }
 
         /// <summary>
+        /// Die aktuelle Mausposition
+        /// </summary>
+        private Point _currentMouseLocation;
+
+        /// <summary>
+        /// Die Position, an der die Maus gedrückt wurde
+        /// </summary>
+        private Point _mouseDownLocation;
+
+        /// <summary>
+        /// Die Position, an der die Maus losgelassen wurde
+        /// </summary>
+        private Point _mouseUpLocation;
+
+        /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Control.MouseMove"/> event.
         /// </summary>
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
+            _currentMouseLocation = e.Location;
+            if (_inDragDrop) Invalidate();
 
             // Mausposition auf Bildgröße skalieren
             int scaledX = e.X*_rangeBitmap.Width/ClientSize.Width;
@@ -157,7 +213,39 @@ namespace Ruby_Rush
 
             // Farbe ausgeben
             pictureBoxColor.BackColor = color;
-            labelColor.Text = String.Format("R: {0,-3} G: {1,-3} B: {2,-3}, Total: {3,-3}", color.R, color.G, color.B, lightness);
+
+            int rPercent = 100*color.R/255;
+            int gPercent = 100*color.G/255;
+            int bPercent = 100*color.B/255;
+
+            labelColor.Text = String.Format("R: {0,-3}/{1,-2}% G: {2,-3}/{3,-2}% B: {4,-3}/{5,-2}%, Total: {6,-3}", color.R, rPercent, color.G, gPercent, color.B, bPercent, lightness);
+        }
+
+        /// <summary>
+        /// Gibt an, ob eine Drag&Drop-Operation gestartet wurde
+        /// </summary>
+        private bool _inDragDrop = false;
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseDown"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            _inDragDrop = true;
+            _mouseDownLocation = e.Location;
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseUp"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            _inDragDrop = false;
+            _mouseUpLocation = e.Location;
         }
     }
 }
