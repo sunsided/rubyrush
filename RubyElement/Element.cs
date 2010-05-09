@@ -1,6 +1,7 @@
 ﻿// ID $Id$
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 
 namespace RubyElement
@@ -8,18 +9,40 @@ namespace RubyElement
     /// <summary>
     /// Klasse, die einen Stein beschreibt
     /// </summary>
-    public abstract class Element : IEquatable<StoneColor>
+    public abstract class Element : IEquatable<StoneColor>, IEquatable<Element>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Element"/> class.
         /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="indexX">The X index.</param>
+        /// <param name="indexY">The Y index.</param>
         /// <param name="rawColor">Die ursprüngliche Farbe</param>
         /// <param name="color">The color.</param>
-        protected Element(Color rawColor, StoneColor color)
+        protected Element(Checkerboard parent, int indexX, int indexY, Color rawColor, StoneColor color)
         {
+            Parent = parent;
+            ParentXIndex = indexX;
+            ParentYIndex = indexY;
+
             RawColor = rawColor;
             Color = color;
         }
+
+        /// <summary>
+        /// Der X-Index im Spielfeld
+        /// </summary>
+        public int ParentXIndex { get; private set; }
+
+        /// <summary>
+        /// Der Y-Index im Spielfeld
+        /// </summary>
+        public int ParentYIndex { get; private set; }
+
+        /// <summary>
+        /// Das Eltern-Grid
+        /// </summary>
+        public Checkerboard Parent { get; private set; }
 
         /// <summary>
         /// Gibt an, ob dieses Element erkannt wurde
@@ -29,16 +52,17 @@ namespace RubyElement
         /// <summary>
         /// Die ursprüngliche Farbe
         /// </summary>
-        public Color RawColor { get; private set; }
+        public Color RawColor { [Pure] get; private set; }
 
         /// <summary>
         /// Die Farbe/Form des Steins
         /// </summary>
-        public StoneColor Color { get; private set; }
+        public StoneColor Color { [Pure] get; private set; }
 
         /// <summary>
         /// Liefert die stereotype Farbe für dieses Element
         /// </summary>
+        [Pure]
         public Color StereotypeColor
         {
             get
@@ -70,9 +94,24 @@ namespace RubyElement
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns></returns>
+        [Pure]
         public bool Equals(StoneColor other)
         {
             return Color.Equals(other);
+        }
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// </returns>
+        /// <param name="other">An object to compare with this object.</param>
+        [Pure]
+        public bool Equals(Element other)
+        {
+            if (other == null) return false;
+            return Color.Equals(other.Color);
         }
 
         /// <summary>
@@ -80,6 +119,7 @@ namespace RubyElement
         /// </summary>
         /// <param name="element">The element.</param>
         /// <returns>The result of the conversion.</returns>
+        [Pure]
         public static implicit operator Color(Element element)
         {
             return element.RawColor;
@@ -90,6 +130,7 @@ namespace RubyElement
         /// </summary>
         /// <param name="element">The element.</param>
         /// <returns>The result of the conversion.</returns>
+        [Pure]
         public static implicit operator StoneColor(Element element)
         {
             return element.Color;

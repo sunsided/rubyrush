@@ -1,6 +1,7 @@
 ﻿// ID $Id$
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading.Tasks;
@@ -24,7 +25,8 @@ namespace RubyImageInterpretation
         /// <param name="elementsX">The elements X.</param>
         /// <param name="elementsY">The elements Y.</param>
         /// <returns></returns>
-        public static Element[,] GenerateGrid(Bitmap input, int gridStartX, int gridStartY, int gridWidth, int gridHeight, int elementsX, int elementsY)
+        [Pure]
+        public static Checkerboard GenerateGrid(Bitmap input, int gridStartX, int gridStartY, int gridWidth, int gridHeight, int elementsX, int elementsY)
         {
             lock (input)
             {
@@ -32,7 +34,7 @@ namespace RubyImageInterpretation
                 const int samplingRadius = 15;
 
                 // Gitter erzeugen
-                Element[,] grid = new Element[elementsX,elementsY];
+                Checkerboard grid = new Checkerboard(elementsX, elementsY);
 
                 // Schrittweite ermitteln
                 int widthSteps = gridWidth/(elementsX - 1);
@@ -58,8 +60,8 @@ namespace RubyImageInterpretation
 
                                                        // Element erzeugen
                                                        Element element = color == StoneColor.Unknown
-                                                                             ? (Element) new UnknownElement(rawcolor)
-                                                                             : new KnownElement(rawcolor, color);
+                                                                             ? (Element) new UnknownElement(grid, x, y, rawcolor)
+                                                                             : new KnownElement(grid, x, y, rawcolor, color);
 
                                                        // Und zuweisen
                                                        grid[x, y] = element;
@@ -80,6 +82,7 @@ namespace RubyImageInterpretation
         /// <param name="color1">Farbe 1</param>
         /// <param name="color2">Farbe 2</param>
         /// <returns></returns>
+        [Pure]
         private static int GetDifference(Color color1, Color color2)
         {
             return Math.Abs(color1.R - color2.R) + Math.Abs(color1.G - color2.G) + Math.Abs(color1.B - color2.B);
@@ -90,6 +93,7 @@ namespace RubyImageInterpretation
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
+        [Pure]
         private static StoneColor DetermineElementType(Color color)
         {
             // Farbdifferenzen ermitteln
@@ -123,6 +127,7 @@ namespace RubyImageInterpretation
         /// <param name="value2">Wert 2</param>
         /// <param name="values">weitere Werte</param>
         /// <returns></returns>
+        [Pure]
         private static int Min(int value1, int value2, params int[] values)
         {
             int min = Math.Min(value1, value2);

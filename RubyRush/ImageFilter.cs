@@ -3,6 +3,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Security.Permissions;
 
 namespace Ruby_Rush
 {
@@ -225,54 +226,6 @@ namespace Ruby_Rush
             capture.UnlockBits(captureData);
 
             return bitmap;
-        }
-
-        public unsafe static Color SampleColor(Bitmap bitmap, int targetX, int targetY, int width)
-        {
-            // Neues Bild erstellen
-            Rectangle imageRect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-
-            // Bilder locken
-            BitmapData captureData = bitmap.LockBits(imageRect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-            // Tatsächliche Breiten in Pixeln berechnen
-            int pixelWidth = captureData.Width * 3;
-
-            // Gesamtoffsets berechnen
-            byte* srcOffset = (byte*)captureData.Scan0.ToPointer();
-
-            int totalR = 0;
-            int totalG = 0;
-            int totalB = 0;
-            int count = 0;
-
-            int startY = Math.Max(0, targetY - width);
-            int endY = Math.Min(targetY + width, imageRect.Height);
-            int startX = Math.Max(0, targetX*3 - width*3);
-            int endX = Math.Min(targetX*3 + width*3, pixelWidth);
-
-            // Schleifen und Spaß haben
-            for (int y = startY; y < endY; ++y)
-            {
-                // Y-Offsets berechnen
-                int srcBase = y * captureData.Stride;
-
-                // X-Position schleifen
-                for (int x = startX; x < endX; x += 3)
-                {
-                    // auslesen ...
-                    byte* src = srcOffset + srcBase + x;
-                    totalB += *src;
-                    totalG += *(src + 1);
-                    totalR += *(src + 2);
-                    ++count;
-                }
-            }
-
-            // Bilder freigeben
-            bitmap.UnlockBits(captureData);
-
-            return Color.FromArgb(totalR / count, totalG / count, totalB / count);
         }
     }
 }

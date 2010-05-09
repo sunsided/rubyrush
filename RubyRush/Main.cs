@@ -139,19 +139,20 @@ namespace Ruby_Rush
                     gr.DrawLine(_gridPen, _mouseDownLocation.X, _currentMouseLocation.Y, _currentMouseLocation.X,
                                 _currentMouseLocation.Y);
 
-                    const int elements = 7;
+                    const int elementsX = Program.ElementCountX - 1;
+                    const int elementsY = Program.ElementCountY - 1;
 
                     // Nebengitter: Horizontale Linien
-                    int width = Math.Abs(_mouseDownLocation.X - _currentMouseLocation.X)/elements;
-                    for (int i = 0; i < elements; ++i)
+                    int width = Math.Abs(_mouseDownLocation.X - _currentMouseLocation.X) / elementsX;
+                    for (int i = 0; i < elementsX; ++i)
                     {
                         int x = _mouseDownLocation.X + width*i;
                         gr.DrawLine(_gridPenSmall, x, _mouseDownLocation.Y, x, _currentMouseLocation.Y);
                     }
 
                     // Nebengitter: Vertikale Linien
-                    int height = Math.Abs(_mouseDownLocation.Y - _currentMouseLocation.Y)/elements;
-                    for (int i = 0; i < elements; ++i)
+                    int height = Math.Abs(_mouseDownLocation.Y - _currentMouseLocation.Y) / elementsY;
+                    for (int i = 0; i < elementsY; ++i)
                     {
                         int y = _mouseDownLocation.Y + height*i;
                         gr.DrawLine(_gridPenSmall, _mouseDownLocation.X, y, _currentMouseLocation.X, y);
@@ -175,11 +176,11 @@ namespace Ruby_Rush
                     const int halfSize = size/2;
 
 
-                    for (int y = 0; y < 8; y++)
+                    for (int y = 0; y < Program.ElementCountX; y++)
                     {
                         float ypos = heightSteps*y + top;
 
-                        for (int x = 0; x < 8; x++)
+                        for (int x = 0; x < Program.ElementCountY; x++)
                         {
                             float xpos = widthSteps*x + left;
 
@@ -340,7 +341,7 @@ namespace Ruby_Rush
         /// <summary>
         /// Die Steinkarte (in Farbe)
         /// </summary>
-        private Element[,] _colorMap = new Element[8, 8];
+        private Checkerboard _colorMap = new Checkerboard(Program.ElementCountX, Program.ElementCountY);
 
         /// <summary>
         /// Gibt an, ob das Gitter angewandt wurde
@@ -357,7 +358,7 @@ namespace Ruby_Rush
             int width = Math.Abs(_bottomRightItem.X - _topLeftItem.X);
             int height = Math.Abs(_bottomRightItem.Y - _topLeftItem.Y);
 
-            _colorMap = GridGenerator.GenerateGrid(_rawCapture, _topLeftItem.X, _topLeftItem.Y, width, height, 8, 8);
+            _colorMap = GridGenerator.GenerateGrid(_rawCapture, _topLeftItem.X, _topLeftItem.Y, width, height, Program.ElementCountX, Program.ElementCountY);
 
             // Allet klar.)
             return true;

@@ -14,6 +14,17 @@ namespace Ruby_Rush
         internal static ContinuousScreenGrabber Grabber = new ContinuousScreenGrabber();
 
         /// <summary>
+        /// Anzahl der Steine in X-Richtung
+        /// </summary>
+        internal const int ElementCountX = 8;
+
+        /// <summary>
+        /// Anzahl der Steine in Y-Richtung
+        /// </summary>
+        internal const int ElementCountY = 8;
+
+
+        /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
