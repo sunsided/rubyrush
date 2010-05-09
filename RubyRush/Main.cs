@@ -4,7 +4,6 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using RubyElement;
-using RubyImageCapture;
 using RubyImageInterpretation;
 
 namespace Ruby_Rush
@@ -31,7 +30,7 @@ namespace Ruby_Rush
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        void RubyRangeShown(object sender, System.EventArgs e)
+        void RubyRangeShown(object sender, EventArgs e)
         {
             SetNewCaptureBounds();
         }
@@ -41,7 +40,7 @@ namespace Ruby_Rush
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        void RubyRange_SizeChanged(object sender, System.EventArgs e)
+        void RubyRange_SizeChanged(object sender, EventArgs e)
         {
             SetNewCaptureBounds();
         }
@@ -51,7 +50,7 @@ namespace Ruby_Rush
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        void RubyRange_Move(object sender, System.EventArgs e)
+        void RubyRange_Move(object sender, EventArgs e)
         {
             SetNewCaptureBounds();
         }
@@ -65,7 +64,7 @@ namespace Ruby_Rush
         /// Raises the <see cref="E:System.Windows.Forms.Form.Load"/> event.
         /// </summary>
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        protected override void OnLoad(System.EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             _rubyRange.Show(this);
@@ -210,7 +209,7 @@ namespace Ruby_Rush
         /// Wird aufgerufen, wenn sich die Größe der Form ändert
         /// </summary>
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        protected override void OnResize(System.EventArgs e)
+        protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
             Invalidate();
@@ -221,7 +220,7 @@ namespace Ruby_Rush
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void RefreshTimerTick(object sender, System.EventArgs e)
+        private void RefreshTimerTick(object sender, EventArgs e)
         {
             Text = string.Format("Ruby Rush, Capture FPS: {0:0.00}", Program.Grabber.FramesPerSecond);
             StartActionCascade();
@@ -282,7 +281,7 @@ namespace Ruby_Rush
         /// <summary>
         /// Gibt an, ob eine Drag&Drop-Operation gestartet wurde
         /// </summary>
-        private bool _inDragDrop = false;
+        private bool _inDragDrop;
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Control.MouseDown"/> event.
@@ -346,7 +345,7 @@ namespace Ruby_Rush
         /// <summary>
         /// Gibt an, ob das Gitter angewandt wurde
         /// </summary>
-        private bool _gridApplied = false;
+        private bool _gridApplied;
 
         /// <summary>
         /// Builds the map.
