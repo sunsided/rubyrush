@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorSampler.cs" />
     <Compile Include="GridGenerator.cs" />
     <Compile Include="ImageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

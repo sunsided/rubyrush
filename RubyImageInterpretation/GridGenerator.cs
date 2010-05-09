@@ -1,6 +1,7 @@
 ﻿// ID $Id$
 
 using System.Drawing;
+using System.Drawing.Imaging;
 using RubyElement;
 
 namespace RubyImageInterpretation
@@ -28,7 +29,11 @@ namespace RubyImageInterpretation
             int widthSteps = gridWidth/(elementsX - 1); // -1, da das Gitter auf den Elementen liegt (nicht um sie herum)
             int heightSteps = gridHeight/(elementsY - 1);
             
-            // TODO: Parallelisieren; Image-Lock rausziehen
+            // Bild-Lock erstellen
+            ColorSampler sampler = new ColorSampler();
+            BitmapData bitmapData = sampler.LockBitmap(input);
+
+            // TODO: Parallelisieren; Image-Lock rausziehen)
             for (int y = 0; y < 8; y++)
             {
                 for (int x = 0; x < 8; x++)
@@ -36,12 +41,15 @@ namespace RubyImageInterpretation
                     int xpos = widthSteps * x + gridStartX;
                     int ypos = heightSteps * y + gridStartY;
 
-                    Color color = ImageFilter.SampleColor(input, xpos, ypos, 10);
+                    Color color = sampler.SampleColorFromLockedBitmap(bitmapData, xpos, ypos, 10);
                     grid[x, y] = new KnownElement(color, StoneColor.Unknown);
                 }
             }
 
-            // Und raus
+            // Entsperrt das Bild
+            sampler.UnlockBitmap(input, bitmapData);
+
+            // Und raus);
             return grid;
         }
     }
