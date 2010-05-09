@@ -40,7 +40,7 @@ namespace RubyElement
         /// <summary>
         /// Lilanes Dreieck
         /// </summary>
-        Pink = 6,
+        Violet = 6,
 
         /// <summary>
         /// Weißer Kreis

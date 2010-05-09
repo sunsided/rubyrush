@@ -120,71 +120,79 @@ namespace Ruby_Rush
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (_rangeBitmap == null) return;
-            e.Graphics.DrawImage(_rawCapture, ClientRectangle);
-
-            if (_inDragDrop)
+            Bitmap source = _rawCapture;
+            if (source == null) return;
+            lock (source)
             {
-                Graphics gr = e.Graphics;
+                e.Graphics.DrawImage(source, ClientRectangle);
 
-                // Hauptgitter
-                gr.DrawLine(_gridPen, _mouseDownLocation.X, _mouseDownLocation.Y, _currentMouseLocation.X, _mouseDownLocation.Y);
-                gr.DrawLine(_gridPen, _mouseDownLocation.X, _mouseDownLocation.Y, _mouseDownLocation.X, _currentMouseLocation.Y);
-                gr.DrawLine(_gridPen, _currentMouseLocation.X, _mouseDownLocation.Y, _currentMouseLocation.X, _currentMouseLocation.Y);
-                gr.DrawLine(_gridPen, _mouseDownLocation.X, _currentMouseLocation.Y, _currentMouseLocation.X, _currentMouseLocation.Y);
-
-                const int elements = 7;
-
-                // Nebengitter: Horizontale Linien
-                int width = Math.Abs(_mouseDownLocation.X - _currentMouseLocation.X) / elements;
-                for (int i = 0; i < elements; ++i)
+                if (_inDragDrop)
                 {
-                    int x = _mouseDownLocation.X + width*i;
-                    gr.DrawLine(_gridPenSmall, x, _mouseDownLocation.Y, x, _currentMouseLocation.Y);
-                }
+                    Graphics gr = e.Graphics;
 
-                // Nebengitter: Vertikale Linien
-                int height = Math.Abs(_mouseDownLocation.Y - _currentMouseLocation.Y) / elements;
-                for (int i = 0; i < elements; ++i)
-                {
-                    int y = _mouseDownLocation.Y + height * i;
-                    gr.DrawLine(_gridPenSmall, _mouseDownLocation.X, y, _currentMouseLocation.X, y);
-                }
-            }
-            else if(_gridApplied)
-            {
-                float top = _topLeftItem.Y*(float) Height/_rawCapture.Height;
-                float left = _topLeftItem.X * (float)Width / _rawCapture.Width;
+                    // Hauptgitter
+                    gr.DrawLine(_gridPen, _mouseDownLocation.X, _mouseDownLocation.Y, _currentMouseLocation.X,
+                                _mouseDownLocation.Y);
+                    gr.DrawLine(_gridPen, _mouseDownLocation.X, _mouseDownLocation.Y, _mouseDownLocation.X,
+                                _currentMouseLocation.Y);
+                    gr.DrawLine(_gridPen, _currentMouseLocation.X, _mouseDownLocation.Y, _currentMouseLocation.X,
+                                _currentMouseLocation.Y);
+                    gr.DrawLine(_gridPen, _mouseDownLocation.X, _currentMouseLocation.Y, _currentMouseLocation.X,
+                                _currentMouseLocation.Y);
 
-                float width = Math.Abs(_bottomRightItem.X - _topLeftItem.X) * (float)Width / (_rawCapture.Width);
-                float height = Math.Abs(_bottomRightItem.Y - _topLeftItem.Y) * (float)Height / (_rawCapture.Height);
+                    const int elements = 7;
 
-                float widthSteps = width / 7.25F;
-                float heightSteps = height / 7.75F;
-
-                Graphics gr = e.Graphics;
-                gr.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Gray)), ClientRectangle);
-
-                const int size = 30;
-                const int halfSize = size/2;
-
-
-                for (int y = 0; y < 8; y++)
-                {
-                    float ypos = heightSteps * y + top;
-
-                    for (int x = 0; x < 8; x++)
+                    // Nebengitter: Horizontale Linien
+                    int width = Math.Abs(_mouseDownLocation.X - _currentMouseLocation.X)/elements;
+                    for (int i = 0; i < elements; ++i)
                     {
-                        float xpos = widthSteps * x + left;
-
-                        Color color = _colorMap[x, y];
-                        Brush brush = new SolidBrush(color);
-
-                        RectangleF rect = new RectangleF(xpos - halfSize, ypos - halfSize, size, size);
-                        gr.DrawEllipse(new Pen(Color.White, 2.0F), rect);
-                        gr.FillEllipse(brush, rect);
+                        int x = _mouseDownLocation.X + width*i;
+                        gr.DrawLine(_gridPenSmall, x, _mouseDownLocation.Y, x, _currentMouseLocation.Y);
                     }
-                } 
+
+                    // Nebengitter: Vertikale Linien
+                    int height = Math.Abs(_mouseDownLocation.Y - _currentMouseLocation.Y)/elements;
+                    for (int i = 0; i < elements; ++i)
+                    {
+                        int y = _mouseDownLocation.Y + height*i;
+                        gr.DrawLine(_gridPenSmall, _mouseDownLocation.X, y, _currentMouseLocation.X, y);
+                    }
+                }
+                else if (_gridApplied)
+                {
+                    float top = _topLeftItem.Y*(float) Height/_rawCapture.Height;
+                    float left = _topLeftItem.X*(float) Width/_rawCapture.Width;
+
+                    float width = Math.Abs(_bottomRightItem.X - _topLeftItem.X) * (float)Width / (source.Width);
+                    float height = Math.Abs(_bottomRightItem.Y - _topLeftItem.Y) * (float)Height / (source.Height);
+
+                    float widthSteps = width/7.25F;
+                    float heightSteps = height/7.75F;
+
+                    Graphics gr = e.Graphics;
+                    gr.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Gray)), ClientRectangle);
+
+                    const int size = 30;
+                    const int halfSize = size/2;
+
+
+                    for (int y = 0; y < 8; y++)
+                    {
+                        float ypos = heightSteps*y + top;
+
+                        for (int x = 0; x < 8; x++)
+                        {
+                            float xpos = widthSteps*x + left;
+
+                            Color color = _colorMap[x, y].StereotypeColor;
+                            Brush brush = new SolidBrush(color);
+
+                            RectangleF rect = new RectangleF(xpos - halfSize, ypos - halfSize, size, size);
+                            gr.DrawEllipse(new Pen(Color.White, 2.0F), rect);
+                            gr.FillEllipse(brush, rect);
+                        }
+                    }
+                }
             }
         }
 

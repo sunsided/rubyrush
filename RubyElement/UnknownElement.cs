@@ -1,5 +1,7 @@
 ﻿// ID $Id$
 
+using System.Drawing;
+
 namespace RubyElement
 {
     /// <summary>
@@ -10,7 +12,7 @@ namespace RubyElement
         /// <summary>
         /// Initializes a new instance of the <see cref="UnknownElement"/> class.
         /// </summary>
-        public UnknownElement() : base(StoneColor.Unknown)
+        public UnknownElement(Color rawColor) : base(rawColor, StoneColor.Unknown)
         {
         }
 

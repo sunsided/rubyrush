@@ -13,15 +13,6 @@ namespace RubyElement
         /// <summary>
         /// Initializes a new instance of the <see cref="Element"/> class.
         /// </summary>
-        /// <param name="color">The color.</param>
-        protected Element(StoneColor color)
-            : this(System.Drawing.Color.Empty, color)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Element"/> class.
-        /// </summary>
         /// <param name="rawColor">Die ursprüngliche Farbe</param>
         /// <param name="color">The color.</param>
         protected Element(Color rawColor, StoneColor color)
@@ -44,6 +35,35 @@ namespace RubyElement
         /// Die Farbe/Form des Steins
         /// </summary>
         public StoneColor Color { get; private set; }
+
+        /// <summary>
+        /// Liefert die stereotype Farbe für dieses Element
+        /// </summary>
+        public Color StereotypeColor
+        {
+            get
+            {
+                switch(Color)
+                {
+                    case StoneColor.White:
+                        return System.Drawing.Color.White;
+                    case StoneColor.Red:
+                        return System.Drawing.Color.DarkRed;
+                    case StoneColor.Green:
+                        return System.Drawing.Color.Green;
+                    case StoneColor.Blue:
+                        return System.Drawing.Color.Blue;
+                    case StoneColor.Violet:
+                        return System.Drawing.Color.Violet;
+                    case StoneColor.Orange:
+                        return System.Drawing.Color.OrangeRed;
+                    case StoneColor.Yellow:
+                        return System.Drawing.Color.Yellow;
+                    default:
+                        return System.Drawing.Color.Black;
+                }
+            }
+        }
 
         /// <summary>
         /// Equalses the specified other.
