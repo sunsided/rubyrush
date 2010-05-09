@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.refreshTimer = new System.Windows.Forms.Timer(this.components);
             this.labelColor = new System.Windows.Forms.Label();
             this.pictureBoxColor = new System.Windows.Forms.PictureBox();
@@ -67,6 +68,7 @@
             this.ClientSize = new System.Drawing.Size(458, 398);
             this.Controls.Add(this.pictureBoxColor);
             this.Controls.Add(this.labelColor);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.Text = "Ruby Rush";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxColor)).EndInit();

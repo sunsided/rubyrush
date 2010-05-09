@@ -1,11 +1,9 @@
 ﻿// ID $Id$
 
 using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using RubyImageCapture;
 
 namespace Ruby_Rush
 {
@@ -33,7 +31,7 @@ namespace Ruby_Rush
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void RubyRangeShown(object sender, System.EventArgs e)
         {
-            StartActionCascade();
+            SetNewCaptureBounds();
         }
 
         /// <summary>
@@ -43,7 +41,7 @@ namespace Ruby_Rush
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void RubyRange_SizeChanged(object sender, System.EventArgs e)
         {
-            StartActionCascade();
+            SetNewCaptureBounds();
         }
 
         /// <summary>
@@ -53,7 +51,7 @@ namespace Ruby_Rush
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void RubyRange_Move(object sender, System.EventArgs e)
         {
-            StartActionCascade();
+            SetNewCaptureBounds();
         }
 
         /// <summary>
@@ -72,30 +70,36 @@ namespace Ruby_Rush
         }
 
         /// <summary>
-        /// Tut Dinge.
+        /// Bild beziehen und verarbeiten
         /// </summary>
         private void StartActionCascade()
         {
-            GetRangeBitmap();
-            BuildMap();
+            if (!GetRangeBitmap()) return;
+            if (!BuildMap()) return;
             Invalidate();
+        }
+
+        /// <summary>
+        /// Setzt den neuen Aufnahmebereich
+        /// </summary>
+        private void SetNewCaptureBounds()
+        {
+            Point topLeft = _rubyRange.FrameTopLeft;
+            Size size = _rubyRange.FrameSize;
+
+            Program.Grabber.CapturePosition = new Rectangle(topLeft, size);
         }
 
         /// <summary>
         /// Holt die Range-Bitmap
         /// </summary>
-        private void GetRangeBitmap()
+        private bool GetRangeBitmap()
         {
-            Point topLeft = _rubyRange.FrameTopLeft;
-            Size size = _rubyRange.FrameSize;
+            _rawCapture = Program.Grabber.GetCapturedImage();
+            if (_rawCapture == null) return false;
 
-            int left = topLeft.X;
-            int top = topLeft.Y;
-            int width = size.Width;
-            int height = size.Height;
-
-            _rawCapture = CaptureScreen.GetDesktopImage(left, top, width, height);
             _rangeBitmap = ImageFilter.FilterBitmap(_rawCapture);
+            return _rangeBitmap != null;
         }
 
         /// <summary>
@@ -209,6 +213,7 @@ namespace Ruby_Rush
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void RefreshTimerTick(object sender, System.EventArgs e)
         {
+            Text = string.Format("Ruby Rush, Capture FPS: {0:0.00}", Program.Grabber.FramesPerSecond);
             StartActionCascade();
         }
 
@@ -234,6 +239,11 @@ namespace Ruby_Rush
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
+
+            // Kein Bild? --> Ende der Fahrt.
+            if (_rangeBitmap == null) return;
+
+            // Position merken
             _currentMouseLocation = e.Location;
             if (_inDragDrop) Invalidate();
 
@@ -327,10 +337,12 @@ namespace Ruby_Rush
         private bool _gridApplied = false;
 
         /// <summary>
-        /// Die aktuelle Steinkarte
+        /// Builds the map.
         /// </summary>
-        private void BuildMap()
+        private bool BuildMap()
         {
+            if (_rawCapture == null) return false;
+
             int width = Math.Abs(_bottomRightItem.X - _topLeftItem.X);
             int height = Math.Abs(_bottomRightItem.Y - _topLeftItem.Y);
 
@@ -348,7 +360,10 @@ namespace Ruby_Rush
                     Color color = ImageFilter.SampleColor(/*_rangeBitmap*/ _rawCapture, xpos, ypos, 10);
                     _colorMap[x, y] = color;
                 }
-            }            
+            }
+
+            // Allet klar.
+            return true;
         }
     }
 }

@@ -3,16 +3,22 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Ruby_Rush
+namespace RubyImageCapture
 {
-    internal static class PlatformInvokeUSER32
+    /// <summary>
+    /// Funktionen für User32.dll-Aufrufe
+    /// </summary>
+    internal static class PlatformInvokeUser32
     {
         #region Class Variables
-        public const int SM_CXSCREEN = 0;
-        public const int SM_CYSCREEN = 1;
+
+        public const int SmCxscreen = 0;
+        public const int SmCyscreen = 1;
+
         #endregion
 
         #region Class Functions
+
         [DllImport("user32.dll", EntryPoint = "GetDesktopWindow")]
         public static extern IntPtr GetDesktopWindow();
 
