@@ -92,6 +92,15 @@ namespace RubyElement
         #region Nachbarn
 
         /// <summary>
+        /// Ermittelt die Anzahl der Elemente zur Rechten
+        /// </summary>
+        public int SpaceRight
+        {
+            [Pure]
+            get { return ParentXIndex - Parent.ElementCountX - 1; }
+        }
+
+        /// <summary>
         /// Liefert den rechten Nachbarn
         /// </summary>
         public Element RightNeighbour
@@ -102,6 +111,15 @@ namespace RubyElement
                 if (ParentXIndex == Parent.ElementCountX - 1) return null;
                 return Parent[ParentXIndex + 1, ParentYIndex];
             }
+        }
+
+        /// <summary>
+        /// Ermittelt die Anzahl der Elemente zur Linken
+        /// </summary>
+        public int SpaceLeft
+        {
+            [Pure]
+            get { return ParentXIndex; }
         }
 
         /// <summary>
@@ -118,6 +136,15 @@ namespace RubyElement
         }
 
         /// <summary>
+        /// Ermittelt die Anzahl der Elemente nach oben
+        /// </summary>
+        public int SpaceTop
+        {
+            [Pure]
+            get { return ParentYIndex; }
+        }
+
+        /// <summary>
         /// Liefert den oberen Nachbarn
         /// </summary>
         public Element TopNeighbour
@@ -128,6 +155,15 @@ namespace RubyElement
                 if (ParentYIndex == 0) return null;
                 return Parent[ParentXIndex, ParentYIndex - 1];
             }
+        }
+
+        /// <summary>
+        /// Ermittelt die Anzahl der Elemente nach unten
+        /// </summary>
+        public int SpaceBottom
+        {
+            [Pure]
+            get { return Parent.ElementCountY - 1 - ParentYIndex; }
         }
 
         /// <summary>
