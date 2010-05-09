@@ -41,11 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameLogic.cs" />
-    <Compile Include="MoveDirection.cs" />
-    <Compile Include="PatternBase.cs" />
+    <Compile Include="Direction.cs" />
     <Compile Include="PatternTree\PatternNode.cs" />
+    <Compile Include="PatternTree\PatternRunner.cs" />
     <Compile Include="PatternTree\PatternTestDelegate.cs" />
-    <Compile Include="Pattern\SimpleXOXXPattern.cs" />
+    <Compile Include="Pattern\DefineSimplePatterns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recommendation.cs" />
   </ItemGroup>
