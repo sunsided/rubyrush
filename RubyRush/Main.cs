@@ -3,7 +3,9 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using RubyElement;
 using RubyImageCapture;
+using RubyImageInterpretation;
 
 namespace Ruby_Rush
 {
@@ -321,15 +323,17 @@ namespace Ruby_Rush
         /// </summary>
         private Point _bottomRightItem;
 
+        /*
         /// <summary>
         /// Die Steinkarte
         /// </summary>
-        private readonly Stone[,] _stoneMap = new Stone[8,8];
+        private readonly StoneColor[,] _stoneMap = new Stone[8,8];
+        */
 
         /// <summary>
         /// Die Steinkarte (in Farbe)
         /// </summary>
-        private readonly Color[,] _colorMap = new Color[8, 8];
+        private Element[,] _colorMap = new Element[8, 8];
 
         /// <summary>
         /// Gibt an, ob das Gitter angewandt wurde
@@ -346,23 +350,9 @@ namespace Ruby_Rush
             int width = Math.Abs(_bottomRightItem.X - _topLeftItem.X);
             int height = Math.Abs(_bottomRightItem.Y - _topLeftItem.Y);
 
-            int widthSteps = width/7;
-            int heightSteps = height / 7;
+            _colorMap = GridGenerator.GenerateGrid(_rawCapture, _topLeftItem.X, _topLeftItem.Y, width, height, 8, 8);
 
-            // TODO: Parallelisieren; Image-Lock rausziehen
-            for(int y=0; y<8; y++)
-            {
-                for (int x = 0; x < 8; x++)
-                {
-                    int xpos = widthSteps*x + _topLeftItem.X;
-                    int ypos = heightSteps * y + _topLeftItem.Y;
-
-                    Color color = ImageFilter.SampleColor(/*_rangeBitmap*/ _rawCapture, xpos, ypos, 10);
-                    _colorMap[x, y] = color;
-                }
-            }
-
-            // Allet klar.
+            // Allet klar.)
             return true;
         }
     }

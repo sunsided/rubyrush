@@ -1,11 +1,11 @@
 ﻿// ID $Id$
 
-namespace Ruby_Rush
+namespace RubyElement
 {
     /// <summary>
     /// Die Steintypen
     /// </summary>
-    internal enum Stone
+    public enum StoneColor
     {
         /// <summary>
         /// Unbekannter Stein

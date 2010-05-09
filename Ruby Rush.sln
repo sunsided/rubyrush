@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RubyRush", "RubyRush\RubyRu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RubyImageCapture", "RubyImageCapture\RubyImageCapture.csproj", "{632F5649-4C70-4A9B-BF2D-8AF434880230}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RubyElement", "RubyElement\RubyElement.csproj", "{10E1E74C-D825-44AA-927F-8606D1202450}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RubyImageInterpretation", "RubyImageInterpretation\RubyImageInterpretation.csproj", "{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,26 @@ Global
 		{632F5649-4C70-4A9B-BF2D-8AF434880230}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{632F5649-4C70-4A9B-BF2D-8AF434880230}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{632F5649-4C70-4A9B-BF2D-8AF434880230}.Release|x86.ActiveCfg = Release|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{10E1E74C-D825-44AA-927F-8606D1202450}.Release|x86.ActiveCfg = Release|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

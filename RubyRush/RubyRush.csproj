@@ -67,7 +67,6 @@
     <Compile Include="SelectionForm.Designer.cs">
       <DependentUpon>SelectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Stone.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -94,9 +93,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RubyElement\RubyElement.csproj">
+      <Project>{10E1E74C-D825-44AA-927F-8606D1202450}</Project>
+      <Name>RubyElement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RubyImageCapture\RubyImageCapture.csproj">
       <Project>{632F5649-4C70-4A9B-BF2D-8AF434880230}</Project>
       <Name>RubyImageCapture</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RubyImageInterpretation\RubyImageInterpretation.csproj">
+      <Project>{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}</Project>
+      <Name>RubyImageInterpretation</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
