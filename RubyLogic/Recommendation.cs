@@ -14,7 +14,7 @@ namespace RubyLogic
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="move">The move.</param>
-        public Recommendation(Element element, MoveDirection move)
+        public Recommendation(Element element, Direction move)
         {
             Element = element;
             Move = move;
@@ -28,6 +28,6 @@ namespace RubyLogic
         /// <summary>
         /// Die Bewegungsrichtung
         /// </summary>
-        public MoveDirection Move { get; private set; }
+        public Direction Move { get; private set; }
     }
 }

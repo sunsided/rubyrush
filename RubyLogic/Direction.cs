@@ -5,7 +5,7 @@ namespace RubyLogic
     /// <summary>
     /// Bewegungsrichtung
     /// </summary>
-    public enum MoveDirection
+    public enum Direction
     {
         /// <summary>
         /// Hoch

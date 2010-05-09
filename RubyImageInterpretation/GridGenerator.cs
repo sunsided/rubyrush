@@ -1,6 +1,7 @@
 ﻿// ID $Id$
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -108,6 +109,10 @@ namespace RubyImageInterpretation
             // Minimum ermitteln
             int smallestValue = Min(redDifference, greenDifference, blueDifference, violetDifference, orangeDifference,
                                     yellowDifference, whiteDifference);
+
+            // Wenn der Wert zu weit abweicht, ignorieren.
+            // 255 ist empirisch.
+            if (smallestValue > 255) return StoneColor.Unknown;
 
             // Minimum vergleichen
             if (smallestValue == redDifference) return StoneColor.Red;

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RubyElement", "RubyElement\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RubyImageInterpretation", "RubyImageInterpretation\RubyImageInterpretation.csproj", "{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RubyLogic", "RubyLogic\RubyLogic.csproj", "{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,16 @@ Global
 		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}.Release|x86.ActiveCfg = Release|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
