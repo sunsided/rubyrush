@@ -89,6 +89,62 @@ namespace RubyElement
             }
         }
 
+        #region Nachbarn
+
+        /// <summary>
+        /// Liefert den rechten Nachbarn
+        /// </summary>
+        public Element RightNeighbour
+        {
+            [Pure]
+            get
+            {
+                if (ParentXIndex == Parent.ElementCountX - 1) return null;
+                return Parent[ParentXIndex + 1, ParentYIndex];
+            }
+        }
+
+        /// <summary>
+        /// Liefert den linken Nachbarn
+        /// </summary>
+        public Element LeftNeighbour
+        {
+            [Pure]
+            get
+            {
+                if (ParentXIndex == 0) return null;
+                return Parent[ParentXIndex - 1, ParentYIndex];
+            }
+        }
+
+        /// <summary>
+        /// Liefert den oberen Nachbarn
+        /// </summary>
+        public Element TopNeighbour
+        {
+            [Pure]
+            get
+            {
+                if (ParentYIndex == 0) return null;
+                return Parent[ParentXIndex, ParentYIndex - 1];
+            }
+        }
+
+        /// <summary>
+        /// Liefert den unteren Nachbarn
+        /// </summary>
+        public Element BottomNeighbour
+        {
+            [Pure]
+            get
+            {
+                if (ParentYIndex == Parent.ElementCountY - 1) return null;
+                return Parent[ParentXIndex, ParentYIndex + 1];
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// Equalses the specified other.
         /// </summary>
@@ -134,6 +190,17 @@ namespace RubyElement
         public static implicit operator StoneColor(Element element)
         {
             return element.Color;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format("[{0}, {1}] {2}", ParentXIndex, ParentYIndex, Color);
         }
     }
 }

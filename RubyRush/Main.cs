@@ -1,7 +1,9 @@
 ﻿// ID $Id$
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 using RubyElement;
 using RubyImageInterpretation;
@@ -17,6 +19,7 @@ namespace Ruby_Rush
         {
             InitializeComponent();
             SetStyle(ControlStyles.Opaque | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+            SetTopLevel(true);
 
             _rubyRange.Move += RubyRange_Move;
             _rubyRange.SizeChanged += RubyRange_SizeChanged;
@@ -291,10 +294,59 @@ namespace Ruby_Rush
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            _inDragDrop = true;
-            _gridApplied = false;
-            _mouseDownLocation = e.Location;
-            Invalidate();
+            if (e.Button == MouseButtons.Left)
+            {
+                _inDragDrop = true;
+                _gridApplied = false;
+                _mouseDownLocation = e.Location;
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Control.MouseClick"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            base.OnMouseClick(e);
+            if(e.Button == MouseButtons.Right)
+            {
+                Point p = GetIndexFromImageCoordinates(e.Location);
+
+                Element element = _colorMap[p.X, p.Y];
+
+                StringBuilder builder = new StringBuilder();
+                builder.AppendLine("Element: " + element ?? "(keines!?)");
+                builder.AppendLine();
+                builder.AppendLine("Left neighbour: " + element.LeftNeighbour ?? "-");
+                builder.AppendLine("Top neighbour: " + element.TopNeighbour ?? "-");
+                builder.AppendLine("Right neighbour: " + element.RightNeighbour ?? "-");
+                builder.AppendLine("Bottom neighbour: " + element.BottomNeighbour ?? "-");
+
+                MessageBox.Show(this, builder.ToString(), "Element");
+            }
+        }
+
+        /// <summary>
+        /// Ermittelt den Index anhand der Mausposition
+        /// </summary>
+        /// <param name="imageCoordinates">Die Position im Bild</param>
+        /// <returns></returns>
+        private Point GetIndexFromImageCoordinates(Point imageCoordinates)
+        {
+            // Bildschirmkoordinaten zu Bildkoordinaten skalieren
+            float scaledX = (float)(imageCoordinates.X - _topLeftItem.X) * _rangeBitmap.Width / (ClientSize.Width - _topLeftItem.X);
+            float scaledY = (float)(imageCoordinates.Y - _topLeftItem.Y) * _rangeBitmap.Height / (ClientSize.Height - _topLeftItem.Y);
+
+            // Bildkoordinaten zu Indizes skalieren
+            int x = (int)Math.Round(scaledX * (Program.ElementCountX) / _rangeBitmap.Width);
+            int y = (int)Math.Round(scaledY * (Program.ElementCountY) / _rangeBitmap.Height);
+
+            // Wertebereich eingrenzen
+            x = Math.Max(Math.Min(Program.ElementCountX, x), 0);
+            y = Math.Max(Math.Min(Program.ElementCountY, y), 0);
+            return new Point(x, y);
         }
 
         /// <summary>
@@ -304,10 +356,11 @@ namespace Ruby_Rush
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
-            _inDragDrop = false;
             _mouseUpLocation = e.Location;
 
             if (_mouseDownLocation == _mouseUpLocation) return;
+            if (!_inDragDrop) return;
+            _inDragDrop = false;
 
             // Fragen!
             if(DialogResult.Yes == MessageBox.Show(this, "Raster übernehmen?", "Feldraster", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
