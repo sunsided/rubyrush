@@ -1,5 +1,6 @@
 ﻿// ID $Id$
 
+using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using RubyElement;
@@ -105,33 +106,35 @@ namespace RubyLogic.PatternTree
         /// Überprüft, ob der Baum zutrifft
         /// </summary>
         /// <returns><c>true</c>, wenn der Baum positiv ausgewertet wurde, ansonsten <c>false</c></returns>
-        public bool EvaluateTree()
+        public bool EvaluateTree(bool reverse = false)
         {
+            if (StartNode == null || StartElement == null) return false;
+
             PatternNode node = StartNode;
             Element element = StartElement;
 
             // Schnelltest: Wenn die Kette länger ist, als die Anzahl der Steine in dieser Richtung,
             // können wir die Auswertung direkt abbrechen.
-            if(node != null)
+            int count = 0;
+            switch(MoveDirection)
             {
-                int count = 0;
-                switch(MoveDirection)
-                {
-                    case Direction.Up:
-                        count = StartElement.SpaceTop;
-                        break;
-                    case Direction.Down:
-                        count = StartElement.SpaceBottom;
-                        break;
-                    case Direction.Left:
-                        count = StartElement.SpaceLeft;
-                        break;
-                    case Direction.Right:
-                        count = StartElement.SpaceRight;
-                        break;
-                }
-                if (node.ChainLength > count) return false;
+                case Direction.Up:
+                    count = StartElement.SpaceTop;
+                    break;
+                case Direction.Down:
+                    count = StartElement.SpaceBottom;
+                    break;
+                case Direction.Left:
+                    count = StartElement.SpaceLeft;
+                    break;
+                case Direction.Right:
+                    count = StartElement.SpaceRight;
+                    break;
             }
+            if (node.ChainLength > count) return false;
+
+            // Letzten Knoten auswählen, falls "Reverse"-Operation gewünscht ist
+            if(reverse) while (!node.IsLastNode) node = node.NextNode;
 
             // Baum auswerten
             while(node != null)
@@ -140,7 +143,7 @@ namespace RubyLogic.PatternTree
                 if (!node.TestFunction(this, StartElement.Color, element)) return false;
 
                 // Nächsten Knoten wählen
-                node = node.NextNode;
+                node = reverse ? node.PrevNode : node.NextNode;
 
                 // Nächstes Element wählen
                 switch (MoveDirection)
@@ -160,6 +163,10 @@ namespace RubyLogic.PatternTree
                 }
                 Debug.Assert(element != null, "Element war null, obwohl der eingehende Test genügend Bewegungsfreiraum ermittelt hat.");
             }
+
+            // Ergebnis anpassen, wenn Reverse-Operation gewünscht ist
+            if(reverse && RecommendationCandiate != null) RecommendationCandiate.RevertDirection();
+
             return true;
         }
         

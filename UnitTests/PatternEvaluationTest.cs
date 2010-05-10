@@ -102,18 +102,22 @@ namespace UnitTests
                         // Nach rechts auswerten
                         PatternRunner node = new PatternRunner(pattern, Direction.Right, element);
                         if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Pattern #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
+                        if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0}, Pattern/Reverse #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
 
                         // Nach links auswerten
                         node = new PatternRunner(pattern, Direction.Left, element);
                         if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Pattern #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
+                        if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0}, Pattern/Reverse #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
 
                         // Nach oben auswerten
                         node = new PatternRunner(pattern, Direction.Up, element);
                         if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Pattern #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
+                        if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0}, Pattern/Reverse #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
 
                         // Nach unten auswerten
                         node = new PatternRunner(pattern, Direction.Down, element);
                         if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Pattern #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
+                        if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0}, Pattern/Reverse #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
                     }
                 }
             }

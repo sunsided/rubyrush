@@ -24,19 +24,5 @@ namespace RubyLogic.Pattern
                 .AppendSimpleNode(PatternTest.EqualityAndCandidate)     // Viertes Element stimmt.
                 .EndChain();
         }
-
-        /// <summary>
-        /// Erzeugt ein XOXX-Muster
-        /// </summary>
-        /// <returns></returns>
-        [PatternDefinition]
-        public static PatternNode CreateXOXXPattern()
-        {
-            return new PatternNode(PatternTest.EqualityAndForwardCandidate)         // Erstes Element stimmt
-                .AppendSimpleNode(PatternTest.Inequality)                           // Zweites Element stimmt nicht
-                .AppendSimpleNode(PatternTest.Equality)                             // Drittes Element stimmt
-                .AppendSimpleNode(PatternTest.Equality)                             // Viertes Element stimmt.
-                .EndChain();
-        }
     }
 }

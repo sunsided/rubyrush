@@ -1,6 +1,7 @@
 ﻿// ID $Id$ 
 
 using System;
+using System.Diagnostics.Contracts;
 using RubyElement;
 
 namespace RubyLogic
@@ -24,12 +25,20 @@ namespace RubyLogic
         /// <summary>
         /// Das betroffene Element
         /// </summary>
-        public Element Element { get; private set; }
+        public Element Element { [Pure] get; private set; }
 
         /// <summary>
         /// Die Bewegungsrichtung
         /// </summary>
-        public Direction Move { get; private set; }
+        public Direction Move { [Pure] get; private set; }
+
+        /// <summary>
+        /// Kehrt die Bewegungsrichtung um, z.B. bei Revers-Auswertung eines Musters
+        /// </summary>
+        internal void RevertDirection()
+        {
+            Move = Move.GetOpposite();
+        }
 
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
@@ -38,6 +47,7 @@ namespace RubyLogic
         /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
         /// </returns>
         /// <param name="other">An object to compare with this object.</param>
+        [Pure]
         public bool Equals(Recommendation other)
         {
             if (other == null) throw new ArgumentNullException("other");
@@ -77,6 +87,7 @@ namespace RubyLogic
         /// <returns>
         /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
+        [Pure]
         public override int GetHashCode()
         {
             return Element.GetHashCode() ^ (Move.GetHashCode() * 37);
@@ -88,6 +99,7 @@ namespace RubyLogic
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
+        [Pure]
         public override string ToString()
         {
             return Element + " " + Move;
