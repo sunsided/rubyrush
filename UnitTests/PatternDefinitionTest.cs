@@ -83,5 +83,30 @@ namespace UnitTests
             Assert.AreSame(child1, side1.EndChain(), "end of chain (side1) is child1");
             Assert.AreSame(root, side1.EndChain().EndChain(), "end of chain² (side1) is child1");
         }
+
+        /// <summary>
+        /// Testet das Anhängen von Knoten in Nebenrichtungen
+        /// </summary>
+        [Test]
+        public void TestPerpendicularNode()
+        {
+            PatternNode root = new PatternNode(PatternTest.Equality);
+            PatternNode side1 = new PatternNode(PatternTest.Equality);
+            PatternNode side2 = new PatternNode(PatternTest.Equality);
+
+            Assert.IsFalse(root.HasPerpendicularNode);
+            Assert.IsFalse(root.HasSecondaryPerpendicularNode);
+
+            root.AppendPerpendicularNode(side1);
+            Assert.IsTrue(root.HasPerpendicularNode);
+            Assert.IsFalse(root.HasSecondaryPerpendicularNode);
+
+            root.AppendPerpendicularNode(side2);
+            Assert.IsTrue(root.HasPerpendicularNode);
+            Assert.IsTrue(root.HasSecondaryPerpendicularNode);
+
+            Assert.AreSame(root.PerpendicularNode, side1);
+            Assert.AreSame(root.PerpendicularNode2, side2);
+        }
     }
 }

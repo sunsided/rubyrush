@@ -1,5 +1,7 @@
 ﻿// ID $Id$
 
+// #define MATCH_PICTURE
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -33,6 +35,8 @@ namespace UnitTests
         /// </summary>
         private readonly Checkerboard _board = new Checkerboard(ElementsX, ElementsY);
 
+#if MATCH_PICTURE
+
         /// <summary>
         /// Die Board-Definition entsprechend dem Beispielscreenshot
         /// </summary>
@@ -47,6 +51,24 @@ namespace UnitTests
                                                              {StoneColor.Orange, StoneColor.Orange, StoneColor.White, StoneColor.Yellow, StoneColor.Red, StoneColor.Blue, StoneColor.White, StoneColor.Violet},
                                                              {StoneColor.Yellow, StoneColor.Green, StoneColor.Blue, StoneColor.Green, StoneColor.Red, StoneColor.White, StoneColor.Green, StoneColor.Red},
                                                          };
+
+#else
+
+        /// <summary>
+        /// Die Board-Definition entsprechend dem Beispielscreenshot
+        /// </summary>
+        public readonly StoneColor[,] BoardDefinition = new StoneColor[ElementsX, ElementsY]
+                                                         {
+                                                             {StoneColor.Orange, StoneColor.Blue, StoneColor.Blue, StoneColor.Green, StoneColor.White, StoneColor.Orange, StoneColor.Yellow, StoneColor.Green},
+                                                             {StoneColor.Orange, StoneColor.White, StoneColor.White, StoneColor.Green, StoneColor.Green, StoneColor.Green, StoneColor.Yellow, StoneColor.Yellow},
+                                                             {StoneColor.Violet, StoneColor.Orange, StoneColor.Green, StoneColor.White, StoneColor.Green, StoneColor.Green, StoneColor.Red, StoneColor.White},
+                                                             {StoneColor.Orange, StoneColor.Violet, StoneColor.Yellow, StoneColor.Green, StoneColor.Green, StoneColor.Green, StoneColor.White, StoneColor.White},
+                                                             {StoneColor.Orange, StoneColor.Orange, StoneColor.Red, StoneColor.Green, StoneColor.Green, StoneColor.White, StoneColor.Blue, StoneColor.Yellow},
+                                                             {StoneColor.Violet, StoneColor.Green, StoneColor.Violet, StoneColor.White, StoneColor.White, StoneColor.Violet, StoneColor.Blue, StoneColor.Orange},
+                                                             {StoneColor.Orange, StoneColor.Orange, StoneColor.White, StoneColor.Yellow, StoneColor.Blue, StoneColor.Blue, StoneColor.White, StoneColor.Blue},
+                                                             {StoneColor.Yellow, StoneColor.Green, StoneColor.Blue, StoneColor.Green, StoneColor.Red, StoneColor.White, StoneColor.Green, StoneColor.Red},
+                                                         };
+#endif
 
         /// <summary>
         /// Die Pattern-Definitionen

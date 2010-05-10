@@ -77,6 +77,11 @@ namespace RubyLogic.PatternTree
         public PatternNode PerpendicularNode { get; private set; }
 
         /// <summary>
+        /// Der nächste Knoten in waagerechter Richtung (auf die aktuelle Achse)
+        /// </summary>
+        public PatternNode PerpendicularNode2 { get; private set; }
+
+        /// <summary>
         /// Ermittelt, ob dieser Knoten einen Folgeknoten in waagerechter Richtung hat
         /// </summary>
         public bool HasPerpendicularNode
@@ -85,6 +90,18 @@ namespace RubyLogic.PatternTree
             get
             {
                 return PerpendicularNode != null;
+            }
+        }
+
+        /// <summary>
+        /// Ermittelt, ob dieser Knoten einen Folgeknoten in waagerechter Richtung hat
+        /// </summary>
+        public bool HasSecondaryPerpendicularNode
+        {
+            [Pure]
+            get
+            {
+                return PerpendicularNode2 != null;
             }
         }
 
@@ -158,7 +175,11 @@ namespace RubyLogic.PatternTree
         public PatternNode AppendPerpendicularNode(PatternTest.TestDelegate testFunction = null)
         {
             PatternNode node = new PatternNode { TestFunction = testFunction };
-            PerpendicularNode = node;
+
+            // Option für sekundäre ... Nebenknoten
+            if (PerpendicularNode == null) PerpendicularNode = node;
+            else PerpendicularNode2 = node;
+
             node.PrevNodePerpendicular = this;
             return node;
         }
@@ -170,7 +191,9 @@ namespace RubyLogic.PatternTree
         /// <returns></returns>
         public PatternNode AppendPerpendicularNode(PatternNode node)
         {
-            PerpendicularNode = node;
+            if (PerpendicularNode == null) PerpendicularNode = node;
+            else PerpendicularNode2 = node;
+
             node.PrevNodePerpendicular = this;
             return node;
         }

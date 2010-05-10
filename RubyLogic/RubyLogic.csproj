@@ -47,6 +47,7 @@
     <Compile Include="PatternProviderAttribute.cs" />
     <Compile Include="GameLogic.cs" />
     <Compile Include="PatternDefinitionAttribute.cs" />
+    <Compile Include="PatternTree\EvaluationDirection.cs" />
     <Compile Include="PatternTree\PatternNode.cs" />
     <Compile Include="PatternTree\PatternRunner.cs" />
     <Compile Include="PatternTree\PatternTest.cs" />

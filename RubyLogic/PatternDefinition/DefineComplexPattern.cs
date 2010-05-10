@@ -73,15 +73,13 @@ namespace RubyLogic.PatternDefinitions
             return new PatternNode(PatternTest.Equality)
                 .AppendSimpleNode(PatternTest.Equality)
                 .AppendSimpleNode(PatternTest.Inequality)
-                    .AppendSimpleNode(PatternTest.Equality)
+                    .AppendPerpendicularNode(PatternTest.Equality)
                     .AppendSimpleNode(PatternTest.Equality)
                     .EndChain()
-                .AppendPerpendicularNode(PatternTest.EqualityAndCandidate)
+                .AppendSimpleNode(PatternTest.EqualityAndCandidate)
                 .EndChain();
         }
 
-        /*
-         * TODO: Sekundäre Perpendikularität?! :D -- Zwei Seitenbäume, jedenfalls!
         /// <summary>
         /// Erzeugt ein XXOXX-Muster
         /// 
@@ -101,12 +99,14 @@ namespace RubyLogic.PatternDefinitions
             return new PatternNode(PatternTest.Equality)
                 .AppendSimpleNode(PatternTest.Equality)
                 .AppendSimpleNode(PatternTest.Inequality)
-                    .AppendSimpleNode(PatternTest.Equality)
+                    .AppendPerpendicularNode(PatternTest.Equality)
                     .AppendSimpleNode(PatternTest.Equality)
                     .EndChain()
-                .AppendPerpendicularNode(PatternTest.EqualityAndCandidate)
+                    .AppendPerpendicularNode(PatternTest.Equality)
+                    .AppendSimpleNode(PatternTest.Equality)
+                    .EndChain()
+                 .AppendSimpleNode(PatternTest.EqualityAndCandidate)
                 .EndChain();
         }
-        */
     }
 }

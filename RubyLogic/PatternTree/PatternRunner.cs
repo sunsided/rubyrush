@@ -146,34 +146,18 @@ namespace RubyLogic.PatternTree
                 if (!node.TestFunction(this, targetColor, element)) return false;
 
                 // Waagerechte Knoten auswerten
-                if(node.HasPerpendicularNode)
+                if (node.HasPerpendicularNode && !node.HasSecondaryPerpendicularNode)
                 {
-                    // Erste Richtungsoption wählen
-                    Direction perpendicularDirection = MoveDirection.GetPerpendicular(Option.First);
-                    Element perpendicularElement = element.GetNeighbourInDirection(perpendicularDirection);
-                    PatternRunner leftRunner = perpendicularElement == null ? null : new PatternRunner(node.PerpendicularNode, perpendicularDirection, perpendicularElement);
-
-                    // Zweite Richtungsoption wählen
-                    perpendicularDirection = MoveDirection.GetPerpendicular(Option.Second);
-                    perpendicularElement = element.GetNeighbourInDirection(perpendicularDirection);
-                    PatternRunner rightRunner = perpendicularElement == null ? null : new PatternRunner(node.PerpendicularNode, perpendicularDirection, perpendicularElement);
-
-                    // Runner auswerten
-                    bool leftSuccess = leftRunner == null ? false : leftRunner.EvaluateTree(targetColor);
-                    bool rightSuccess = rightRunner == null ? false : rightRunner.EvaluateTree(targetColor);
-
-                    // Wenn beide fehlgeschlagen sind, brauchen wir den Baum nicht weitertesten
-                    if (!leftSuccess && !rightSuccess) return false;
-
-                    // Ansonsten merken wir uns den erstbesten Kandidaten
-                    if(leftSuccess && leftRunner.RecommendationCandiate != null)
-                    {
-                        RegisterCandidate(leftRunner.RecommendationCandiate);
-                    }
-                    else if (rightSuccess && rightRunner.RecommendationCandiate != null)
-                    {
-                        RegisterCandidate(rightRunner.RecommendationCandiate);
-                    }
+                    // Wenn nur ein waagerechter Knoten existiert, genügt diese Bedingung
+                    if (!ProcessPerpendicularNode(node.PerpendicularNode, targetColor, element)) return false;    
+                }
+                else if (node.HasPerpendicularNode && node.HasSecondaryPerpendicularNode)
+                {
+                    // Existieren zwei waagerechte Knoten, müssen beide erfolgreich evaluieren
+                    if ((!ProcessPerpendicularNode(node.PerpendicularNode, targetColor, element, EvaluationDirection.Left) ||
+                        !ProcessPerpendicularNode(node.PerpendicularNode2, targetColor, element, EvaluationDirection.Right)) ||
+                        (!ProcessPerpendicularNode(node.PerpendicularNode, targetColor, element, EvaluationDirection.Right) ||
+                        !ProcessPerpendicularNode(node.PerpendicularNode2, targetColor, element, EvaluationDirection.Left))) return false;
                 }
 
                 // Nächsten Knoten wählen
@@ -190,6 +174,46 @@ namespace RubyLogic.PatternTree
             
             // Kandidat als endgültig markieren
             if(RecommendationCandiate != null) RecommendationCandiate.MakeFinal();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Behandelt waagerechte Teilbäume
+        /// </summary>
+        /// <param name="perpendicularNode">Der Startknoten im Seitenbaum</param>
+        /// <param name="targetColor">Die Zielfarbe</param>
+        /// <param name="currentElement">Das aktuelle Element</param>
+        /// <param name="direction">Die Auswertungsrichtung</param>
+        /// <returns></returns>
+        private bool ProcessPerpendicularNode(PatternNode perpendicularNode, StoneColor targetColor, Element currentElement, EvaluationDirection direction = EvaluationDirection.Left | EvaluationDirection.Right)
+        {
+            // Erste Richtungsoption wählen
+            Direction perpendicularDirection = MoveDirection.GetPerpendicular(Option.First);
+            Element perpendicularElement = ((direction & EvaluationDirection.Left) == EvaluationDirection.Left) ? currentElement.GetNeighbourInDirection(perpendicularDirection) : null;
+            PatternRunner leftRunner = perpendicularElement == null ? null : new PatternRunner(perpendicularNode, perpendicularDirection, perpendicularElement);
+
+            // Zweite Richtungsoption wählen
+            perpendicularDirection = MoveDirection.GetPerpendicular(Option.Second);
+            perpendicularElement = ((direction & EvaluationDirection.Right) == EvaluationDirection.Right) ? currentElement.GetNeighbourInDirection(perpendicularDirection) : null;
+            PatternRunner rightRunner = perpendicularElement == null ? null : new PatternRunner(perpendicularNode, perpendicularDirection, perpendicularElement);
+
+            // Runner auswerten
+            bool leftSuccess = leftRunner == null ? false : leftRunner.EvaluateTree(targetColor);
+            bool rightSuccess = rightRunner == null ? false : rightRunner.EvaluateTree(targetColor);
+
+            // Wenn beide fehlgeschlagen sind, brauchen wir den Baum nicht weitertesten
+            if (!leftSuccess && !rightSuccess) return false;
+
+            // Ansonsten merken wir uns den erstbesten Kandidaten
+            if (leftSuccess && leftRunner.RecommendationCandiate != null)
+            {
+                RegisterCandidate(leftRunner.RecommendationCandiate);
+            }
+            else if (rightSuccess && rightRunner.RecommendationCandiate != null)
+            {
+                RegisterCandidate(rightRunner.RecommendationCandiate);
+            }
 
             return true;
         }

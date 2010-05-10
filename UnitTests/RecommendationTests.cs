@@ -45,10 +45,10 @@ namespace UnitTests
             Recommendation recB = new Recommendation(board[0, 1], Direction.Up);
             Recommendation recC = new Recommendation(board[1, 0], Direction.Left);
 
-            Assert.IsTrue(recA.Equals(recB), "Gleichheit up/down fehlgeschlagen");
-            Assert.IsTrue(recB.Equals(recA), "Gleichheit up/down fehlgeschlagen");
-            Assert.IsFalse(recA.Equals(recC), "Gleichheit up/down fehlgeschlagen");
-            Assert.IsFalse(recC.Equals(recA), "Gleichheit up/down fehlgeschlagen");
+            Assert.IsTrue(recA.IsSameMove(recB), "Gleichheit up/down fehlgeschlagen");
+            Assert.IsTrue(recB.IsSameMove(recA), "Gleichheit up/down fehlgeschlagen");
+            Assert.IsFalse(recA.IsSameMove(recC), "Gleichheit up/down fehlgeschlagen");
+            Assert.IsFalse(recC.IsSameMove(recA), "Gleichheit up/down fehlgeschlagen");
         }
 
         /// <summary>
@@ -66,10 +66,10 @@ namespace UnitTests
             Recommendation recB = new Recommendation(board[1, 0], Direction.Left);
             Recommendation recC = new Recommendation(board[0, 1], Direction.Up);
 
-            Assert.IsTrue(recA.Equals(recB), "Gleichheit left/right fehlgeschlagen");
-            Assert.IsTrue(recB.Equals(recA), "Gleichheit left/right fehlgeschlagen");
-            Assert.IsFalse(recA.Equals(recC), "Gleichheit left/right fehlgeschlagen");
-            Assert.IsFalse(recC.Equals(recA), "Gleichheit left/right fehlgeschlagen");
+            Assert.IsTrue(recA.IsSameMove(recB), "Gleichheit left/right fehlgeschlagen");
+            Assert.IsTrue(recB.IsSameMove(recA), "Gleichheit left/right fehlgeschlagen");
+            Assert.IsFalse(recA.IsSameMove(recC), "Gleichheit left/right fehlgeschlagen");
+            Assert.IsFalse(recC.IsSameMove(recA), "Gleichheit left/right fehlgeschlagen");
         }
     }
 }
