@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="GameLogic.cs" />
     <Compile Include="Direction.cs" />
+    <Compile Include="PatternDefinitionAttribute.cs" />
     <Compile Include="PatternTree\PatternNode.cs" />
     <Compile Include="PatternTree\PatternRunner.cs" />
     <Compile Include="PatternTree\PatternTestDelegate.cs" />

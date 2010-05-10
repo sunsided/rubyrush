@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ElementTests.cs" />
+    <Compile Include="PatternDefinitionTest.cs" />
     <Compile Include="RecommendationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
