@@ -46,7 +46,7 @@
     <Compile Include="PatternDefinitionAttribute.cs" />
     <Compile Include="PatternTree\PatternNode.cs" />
     <Compile Include="PatternTree\PatternRunner.cs" />
-    <Compile Include="PatternTree\PatternTestDelegate.cs" />
+    <Compile Include="PatternTree\PatternTest.cs" />
     <Compile Include="Pattern\DefineSimplePattern.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recommendation.cs" />
