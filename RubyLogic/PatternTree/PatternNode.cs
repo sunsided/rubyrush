@@ -13,7 +13,7 @@ namespace RubyLogic.PatternTree
         /// Initializes a new instance of the <see cref="PatternNode"/> class.
         /// </summary>
         /// <param name="testFunction">The test function.</param>
-        public PatternNode(PatternTestDelegate testFunction = null)
+        public PatternNode(PatternTest.TestDelegate testFunction = null)
         {
             TestFunction = testFunction;
         }
@@ -21,7 +21,7 @@ namespace RubyLogic.PatternTree
         /// <summary>
         /// Die Testfunktion
         /// </summary>
-        public PatternTestDelegate TestFunction { get; set; }
+        public PatternTest.TestDelegate TestFunction { get; set; }
 
         /// <summary>
         /// Der nächste Knoten
@@ -75,7 +75,7 @@ namespace RubyLogic.PatternTree
         /// </summary>
         /// <param name="testFunction">Die zu verwendende Testfunktion</param>
         /// <returns></returns>
-        public PatternNode AppendSimpleNode(PatternTestDelegate testFunction = null)
+        public PatternNode AppendSimpleNode(PatternTest.TestDelegate testFunction = null)
         {
             PatternNode node = new PatternNode {TestFunction = testFunction};
             NextNode = node;
@@ -87,7 +87,7 @@ namespace RubyLogic.PatternTree
         /// </summary>
         /// <param name="testFunction">Die zu verwendende Testfunktion</param>
         /// <returns></returns>
-        public PatternNode AppendPerpendicularNode(PatternTestDelegate testFunction = null)
+        public PatternNode AppendPerpendicularNode(PatternTest.TestDelegate testFunction = null)
         {
             PatternNode node = new PatternNode { TestFunction = testFunction };
             PerpendicularNode = node;

@@ -17,10 +17,10 @@ namespace RubyLogic.Pattern
         [PatternDefinition]
         public static PatternNode CreateXXOXPattern()
         {
-            return new PatternNode((runner, color, element) => element.Equals(color))       // Erstes Element stimmt
-                .AppendSimpleNode((runner, color, element) => element.Equals(color))         // Zweites Element stimmt
-                .AppendSimpleNode((runner, color, element) => !element.Equals(color))        // Drittes Element stimmt nicht
-                .AppendSimpleNode((runner, color, element) => element.Equals(color));        // Viertes Element stimmt.
+            return new PatternNode(PatternTest.Equality)       // Erstes Element stimmt
+                .AppendSimpleNode(PatternTest.Equality)         // Zweites Element stimmt
+                .AppendSimpleNode(PatternTest.Inequality)        // Drittes Element stimmt nicht
+                .AppendSimpleNode(PatternTest.EqualityAndCandidate);        // Viertes Element stimmt.
         }
 
         /// <summary>
@@ -30,10 +30,10 @@ namespace RubyLogic.Pattern
         [PatternDefinition]
         public static PatternNode CreateXOXXPattern()
         {
-            return new PatternNode((runner, color, element) => element.Equals(color))       // Erstes Element stimmt
-                .AppendSimpleNode((runner, color, element) => !element.Equals(color))        // Zweites Element stimmt nicht
-                .AppendSimpleNode((runner, color, element) => element.Equals(color))         // Drittes Element stimmt
-                .AppendSimpleNode((runner, color, element) => element.Equals(color));        // Viertes Element stimmt.
+            return new PatternNode(PatternTest.EqualityAndForwardCandidate)       // Erstes Element stimmt
+                .AppendSimpleNode(PatternTest.Inequality)        // Zweites Element stimmt nicht
+                .AppendSimpleNode(PatternTest.Equality)         // Drittes Element stimmt
+                .AppendSimpleNode(PatternTest.Equality);        // Viertes Element stimmt.
         }
     }
 }

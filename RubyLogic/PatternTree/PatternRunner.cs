@@ -1,5 +1,6 @@
 ﻿// ID $Id$
 
+using System.Diagnostics.Contracts;
 using RubyElement;
 
 namespace RubyLogic.PatternTree
@@ -25,17 +26,22 @@ namespace RubyLogic.PatternTree
         /// <summary>
         /// Das Startelement
         /// </summary>
-        public Element StartElement { get; private set; }
+        public Element StartElement { [Pure] get; private set; }
 
         /// <summary>
         /// Die Bewegungsrichtung
         /// </summary>
-        public Direction MoveDirection { get; private set; }
+        public Direction MoveDirection { [Pure] get; private set; }
 
         /// <summary>
         /// Der Startknoten
         /// </summary>
-        public PatternNode StartNode { get; private set; }
+        public PatternNode StartNode { [Pure] get; private set; }
+
+        /// <summary>
+        /// Kandidat für einen Zug-Vorschlag, falls dieser Teilbaum erfolgreich ausgewertet wird
+        /// </summary>
+        public Recommendation RecommendationCandiate { [Pure] get; private set; }
 
         /// <summary>
         /// Liefert das nächste Element
@@ -58,7 +64,7 @@ namespace RubyLogic.PatternTree
                     return null;
             }
         }
-
+        
         /// <summary>
         /// Erzeugt <see cref="PatternRunner"/>, die rechtwinklig zur aktuellen Richtung arbeiten
         /// </summary>
@@ -97,8 +103,8 @@ namespace RubyLogic.PatternTree
         /// <summary>
         /// Überprüft, ob der Baum zutrifft
         /// </summary>
-        /// <returns></returns>
-        public bool TestMatch()
+        /// <returns><c>true</c>, wenn der Baum positiv ausgewertet wurde, ansonsten <c>false</c></returns>
+        public bool EvaluateTree()
         {
             PatternNode node = StartNode;
             Element element = StartElement;
@@ -132,6 +138,18 @@ namespace RubyLogic.PatternTree
                 if (!node.TestFunction(this, StartElement.Color, element)) return false;
                 node = node.NextNode;
             }
+            return true;
+        }
+        
+        /// <summary>
+        /// Registriert das Element als Kandidat für einen Zug
+        /// </summary>
+        /// <param name="element">Das betroffene Element</param>
+        /// <param name="moveBackwards">Gibt an, dass das Element rückwärts in Auswärtungsrichtung bewegt werden soll. Wenn <c>false</c>, wird das Element in Auswertungsrichtung bewegt.</param>
+        /// <returns>Immer <c>true</c></returns>
+        public bool RegisterCandidate(Element element, bool moveBackwards = true)
+        {
+            RecommendationCandiate = new Recommendation(element, moveBackwards ? MoveDirection.GetOpposite() : MoveDirection);
             return true;
         }
     }
