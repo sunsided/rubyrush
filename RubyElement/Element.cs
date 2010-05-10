@@ -203,7 +203,7 @@ namespace RubyElement
         public bool Equals(Element other)
         {
             if (other == null) return false;
-            return Color.Equals(other.Color);
+            return ParentXIndex == other.ParentXIndex && ParentYIndex == other.ParentYIndex && Color.Equals(other.Color);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿// ID $Id$ 
 
+using System;
 using RubyElement;
 
 namespace RubyLogic
@@ -7,7 +8,7 @@ namespace RubyLogic
     /// <summary>
     /// Eine Empfehlung für einen Zug
     /// </summary>
-    public sealed class Recommendation
+    public sealed class Recommendation : IEquatable<Recommendation>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Recommendation"/> class.
@@ -29,5 +30,45 @@ namespace RubyLogic
         /// Die Bewegungsrichtung
         /// </summary>
         public Direction Move { get; private set; }
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// </returns>
+        /// <param name="other">An object to compare with this object.</param>
+        public bool Equals(Recommendation other)
+        {
+            if (other == null) throw new ArgumentNullException("other");
+
+            // Identität testen
+            bool selftest = Element.Equals(other.Element) && Move.Equals(other.Move);
+
+            // Entgegengesetzten Zug testen
+            bool countertest = false;
+            switch(Move)
+            {
+                case Direction.Up:
+                    countertest = (other.Move == Direction.Down) &&
+                                  (other.Element.ParentYIndex == Element.ParentYIndex - 1);
+                    break;
+                case Direction.Down:
+                    countertest = (other.Move == Direction.Up) &&
+                                  (other.Element.ParentYIndex == Element.ParentYIndex + 1);
+                    break;
+                case Direction.Left:
+                    countertest = (other.Move == Direction.Right) &&
+                                  (other.Element.ParentXIndex == Element.ParentXIndex - 1);
+                    break;
+                case Direction.Right:
+                    countertest = (other.Move == Direction.Left) &&
+                                  (other.Element.ParentXIndex == Element.ParentXIndex + 1);
+                    break;
+            }
+
+            // Eines von beiden sollte für eine Gleichheit zutreffen
+            return selftest || countertest;
+        }
     }
 }

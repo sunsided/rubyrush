@@ -55,6 +55,8 @@ namespace RubyLogic
             // Ranking 3
             // O O X O O
             // X X O X X
+
+            throw new NotImplementedException();
         }
     }
 }
