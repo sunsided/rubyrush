@@ -3,10 +3,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using NUnit.Framework;
 using RubyElement;
 using RubyLogic;
-using RubyLogic.Pattern;
+using RubyLogic.PatternDefinitions;
 using RubyLogic.PatternTree;
 
 namespace UnitTests
@@ -50,7 +51,7 @@ namespace UnitTests
         /// <summary>
         /// Die Pattern-Definitionen
         /// </summary>
-        private IList<PatternNode> _patternDefinitions;
+        private IList<Pattern> _patternDefinitions;
 
         /// <summary>
         /// Erzeugt ein Element
@@ -118,6 +119,41 @@ namespace UnitTests
         }
 
         /// <summary>
+        /// Wertet das Spielbrett nach einem bestimmten Muster aus
+        /// </summary>
+        [Test]
+        public void EvaluateAll()
+        {
+            // Alle Empfehlungen durchlaufen
+            for (int p = 0; p < _patternDefinitions.Count; ++p)
+            {
+                Pattern pattern = _patternDefinitions[p];
+                Trace.WriteLine("** Teste Muster " + pattern.Description);
+                List<Recommendation> recommendations = new List<Recommendation>();
+
+                for (int y = 0; y < ElementsY; ++y)
+                {
+                    for (int x = 0; x < ElementsX; ++x)
+                    {
+                        Element element = _board[x, y];
+                        IList<Recommendation> recs = pattern.Evaluate(element);
+                        recommendations.AddRange(recs);
+                    }
+                }
+
+                // Empfehlungen auswerten
+                Trace.WriteLine(recommendations.Count + " Treffer gefunden.");
+                recommendations = recommendations.Distinct().ToList();
+                for (int r = 0; r < recommendations.Count; ++r)
+                {
+                    Recommendation rec = recommendations[r];
+                    Trace.WriteLine(string.Format("Vorschlag: {0}", rec));
+                }
+                Trace.WriteLine("");
+            }
+        }
+
+        /// <summary>
         /// Testet das XXOX-Muster
         /// </summary>
         [Test]
@@ -135,6 +171,16 @@ namespace UnitTests
         {
             Trace.WriteLine("Teste XXO-Muster");
             EvaluateBoard(DefineSimplePattern.CreateXXOPattern());
+        }
+
+        /// <summary>
+        /// Testet das XOX-Muster
+        /// </summary>
+        [Test]
+        public void TestXOXPattern()
+        {
+            Trace.WriteLine("Teste XOX-Muster");
+            EvaluateBoard(DefineSimplePattern.CreateXOXPattern());
         }
     }
 }

@@ -44,9 +44,9 @@ namespace RubyLogic
         /// Findet alle Pattern-Definitionen in dieser Assembly
         /// </summary>
         /// <returns></returns>
-        public static IList<PatternNode> GetPatternDefinitions()
+        public static IList<Pattern> GetPatternDefinitions()
         {
-            List<PatternNode> nodes = new List<PatternNode>();
+            List<Pattern> patternList = new List<Pattern>();
             Assembly assembly = Assembly.GetExecutingAssembly();
             
             // Typen ermitteln
@@ -68,15 +68,20 @@ namespace RubyLogic
                     // Auf Attribut testen
                     PatternDefinitionAttribute[] attributes = (PatternDefinitionAttribute[])method.GetCustomAttributes(typeof(PatternDefinitionAttribute), true);
                     if (attributes.Length == 0) continue;
+                    PatternDefinitionAttribute definition = attributes[0];
 
                     // Funktion auswerten
                     PatternNode node = method.Invoke(null, null) as PatternNode;
                     if (node == null) continue;
-                    nodes.Add(node);
+
+
+                    // Pattern erzeugen
+                    Pattern pattern = new Pattern(node, definition.Ranking, definition.Description, definition.IsSymmetric);
+                    patternList.Add(pattern);
                 }
             }
 
-            return nodes;
+            return patternList;
         }
     }
 }

@@ -66,11 +66,18 @@ namespace RubyLogic
             if (other == null) throw new ArgumentNullException("other");
 
             // Identität testen
-            bool selftest = Element.Equals(other.Element) && Move.Equals(other.Move);
+            return Element.Equals(other.Element) && Move.Equals(other.Move);
+        }
 
-            // Entgegengesetzten Zug testen
+        /// <summary>
+        /// Gibt an, ob die andere Empfehlung denselben Zug darstellt
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsSameMove(Recommendation other)
+        {
             bool countertest = false;
-            switch(Move)
+            switch (Move)
             {
                 case Direction.Up:
                     countertest = (other.Move == Direction.Down) &&
@@ -89,9 +96,7 @@ namespace RubyLogic
                                   (other.Element.ParentXIndex == Element.ParentXIndex + 1);
                     break;
             }
-
-            // Eines von beiden sollte für eine Gleichheit zutreffen
-            return selftest || countertest;
+            return countertest;
         }
 
         /// <summary>
