@@ -128,7 +128,7 @@ namespace UnitTests
             for (int p = 0; p < _patternDefinitions.Count; ++p)
             {
                 Pattern pattern = _patternDefinitions[p];
-                Trace.WriteLine("** Teste Muster " + pattern.Description);
+                Trace.WriteLine("** Teste Muster " + pattern.Description + " (Rang " + pattern.Ranking + ")");
                 List<Recommendation> recommendations = new List<Recommendation>();
 
                 for (int y = 0; y < ElementsY; ++y)

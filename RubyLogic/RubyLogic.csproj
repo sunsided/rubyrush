@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pattern.cs" />
+    <Compile Include="PatternDefinition\DefineComplexPattern.cs" />
     <Compile Include="PatternDefinition\DefineSimplePattern.cs" />
     <Compile Include="PatternProviderAttribute.cs" />
     <Compile Include="GameLogic.cs" />
