@@ -105,8 +105,21 @@ namespace RubyLogic.PatternTree
         /// <summary>
         /// Überprüft, ob der Baum zutrifft
         /// </summary>
+        /// <param name="reverse">Gibt an, ob der Baum in umgekehrter Richtung aufgerufen werden soll</param>
         /// <returns><c>true</c>, wenn der Baum positiv ausgewertet wurde, ansonsten <c>false</c></returns>
         public bool EvaluateTree(bool reverse = false)
+        {
+            StoneColor targetColor = StartElement.Color;
+            return EvaluateTree(targetColor, reverse);
+        }
+
+        /// <summary>
+        /// Überprüft, ob der Baum zutrifft
+        /// </summary>
+        /// <param name="targetColor">Die Zielfarbe.</param>
+        /// <param name="reverse">Gibt an, ob der Baum in umgekehrter Richtung aufgerufen werden soll</param>
+        /// <returns><c>true</c>, wenn der Baum positiv ausgewertet wurde, ansonsten <c>false</c></returns>
+        private bool EvaluateTree(StoneColor targetColor, bool reverse = false)
         {
             if (StartNode == null || StartElement == null) return false;
 
@@ -115,23 +128,8 @@ namespace RubyLogic.PatternTree
 
             // Schnelltest: Wenn die Kette länger ist, als die Anzahl der Steine in dieser Richtung,
             // können wir die Auswertung direkt abbrechen.
-            int count = 0;
-            switch(MoveDirection)
-            {
-                case Direction.Up:
-                    count = StartElement.SpaceTop;
-                    break;
-                case Direction.Down:
-                    count = StartElement.SpaceBottom;
-                    break;
-                case Direction.Left:
-                    count = StartElement.SpaceLeft;
-                    break;
-                case Direction.Right:
-                    count = StartElement.SpaceRight;
-                    break;
-            }
-            if (node.ChainLength > count) return false;
+            int count = StartElement.GetSpaceInDirection(MoveDirection);
+            if (node.ChainLength - 1 > count) return false;
 
             // Letzten Knoten auswählen, falls "Reverse"-Operation gewünscht ist
             if(reverse) while (!node.IsLastNode) node = node.NextNode;
@@ -140,27 +138,45 @@ namespace RubyLogic.PatternTree
             while(node != null)
             {
                 // TODO: waagerechte Elemente auswerten
-                if (!node.TestFunction(this, StartElement.Color, element)) return false;
+                if (!node.TestFunction(this, targetColor, element)) return false;
+
+                // Waagerechte Knoten auswerten
+                if(node.HasPerpendicularNode)
+                {
+                    // Erste Richtungsoption wählen
+                    Direction perpendicularDirection = MoveDirection.GetPerpendicular(Option.First);
+                    Element perpendicularElement = element.GetNeighbourInDirection(perpendicularDirection);
+                    PatternRunner leftRunner = perpendicularElement == null ? null : new PatternRunner(node.PerpendicularNode, perpendicularDirection, perpendicularElement);
+
+                    // Zweite Richtungsoption wählen
+                    perpendicularDirection = MoveDirection.GetPerpendicular(Option.Second);
+                    perpendicularElement = element.GetNeighbourInDirection(perpendicularDirection);
+                    PatternRunner rightRunner = perpendicularElement == null ? null : new PatternRunner(node.PerpendicularNode, perpendicularDirection, perpendicularElement);
+
+                    // Runner auswerten
+                    bool leftSuccess = leftRunner == null ? false : leftRunner.EvaluateTree(targetColor);
+                    bool rightSuccess = rightRunner == null ? false : rightRunner.EvaluateTree(targetColor);
+
+                    // Wenn beide fehlgeschlagen sind, brauchen wir den Baum nicht weitertesten
+                    if (!leftSuccess && !rightSuccess) return false;
+
+                    // Ansonsten merken wir uns den erstbesten Kandidaten
+                    if(leftSuccess && leftRunner.RecommendationCandiate != null)
+                    {
+                        RegisterCandidate(leftRunner.RecommendationCandiate);
+                    }
+                    else if (rightSuccess && rightRunner.RecommendationCandiate != null)
+                    {
+                        RegisterCandidate(rightRunner.RecommendationCandiate);
+                    }
+                }
 
                 // Nächsten Knoten wählen
+                if (node.IsLastNode) break;
                 node = reverse ? node.PrevNode : node.NextNode;
 
                 // Nächstes Element wählen
-                switch (MoveDirection)
-                {
-                    case Direction.Up:
-                        element = element.TopNeighbour;
-                        break;
-                    case Direction.Down:
-                        element = element.BottomNeighbour;
-                        break;
-                    case Direction.Left:
-                        element = element.LeftNeighbour;
-                        break;
-                    case Direction.Right:
-                        element = element.RightNeighbour;
-                        break;
-                }
+                element = element.GetNeighbourInDirection(MoveDirection);
                 Debug.Assert(element != null, "Element war null, obwohl der eingehende Test genügend Bewegungsfreiraum ermittelt hat.");
             }
 
@@ -180,6 +196,16 @@ namespace RubyLogic.PatternTree
         {
             RecommendationCandiate = new Recommendation(element, moveBackwards ? MoveDirection.GetOpposite() : MoveDirection);
             return true;
+        }
+
+        /// <summary>
+        /// Übernimmt eine Empfehlung, z.B. aus einem Unterbaum
+        /// </summary>
+        /// <param name="recommendation">Die zu übernehmende Empfehlung</param>
+        /// <returns>Immer <c>true</c></returns>
+        private void RegisterCandidate(Recommendation recommendation)
+        {
+            RecommendationCandiate = recommendation;
         }
     }
 }

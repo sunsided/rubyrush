@@ -92,6 +92,50 @@ namespace RubyElement
         #region Nachbarn
 
         /// <summary>
+        /// Liefert den Nachbarn in einer bestimmten Richtung
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public Element GetNeighbourInDirection(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Up:
+                    return TopNeighbour;
+                case Direction.Down:
+                    return BottomNeighbour;
+                case Direction.Left:
+                    return LeftNeighbour;
+                case Direction.Right:
+                    return RightNeighbour;
+                default:
+                    throw new ArgumentException("direction");
+            }
+        }
+
+        /// <summary>
+        /// Liefert die Anzahl Steine in der gegebenen Richtung
+        /// </summary>
+        /// <param name="direction">Die Richtung</param>
+        /// <returns></returns>
+        public int GetSpaceInDirection(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Up:
+                    return SpaceTop;
+                case Direction.Down:
+                    return SpaceBottom;
+                case Direction.Left:
+                    return SpaceLeft;
+                case Direction.Right:
+                    return SpaceRight;
+                default:
+                    throw new ArgumentException("direction");
+            }
+        }
+
+        /// <summary>
         /// Ermittelt die Anzahl der Elemente zur Rechten
         /// </summary>
         public int SpaceRight

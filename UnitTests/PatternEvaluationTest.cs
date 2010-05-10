@@ -6,6 +6,7 @@ using System.Drawing;
 using NUnit.Framework;
 using RubyElement;
 using RubyLogic;
+using RubyLogic.Pattern;
 using RubyLogic.PatternTree;
 
 namespace UnitTests
@@ -83,10 +84,9 @@ namespace UnitTests
         }
 
         /// <summary>
-        /// Testet die Auswertung des Spielbretts
+        /// Wertet das Spielbrett nach einem bestimmten Muster aus
         /// </summary>
-        [Test]
-        public void EvaluateBoard()
+        public void EvaluateBoard(PatternNode pattern)
         {
             for (int y = 0; y < ElementsY; ++y)
             {
@@ -94,33 +94,47 @@ namespace UnitTests
                 {
                     Element element = _board[x, y];
 
-                    // Alle Definitionen durchlaufen
-                    for (int n = 0; n < _patternDefinitions.Count; ++n)
-                    {
-                        PatternNode pattern = _patternDefinitions[n];
+                    // Nach rechts auswerten
+                    PatternRunner node = new PatternRunner(pattern, Direction.Right, element);
+                    if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Vorschlag: {1}", element, node.RecommendationCandiate));
+                    if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0} (Reverse), Vorschlag: {1}", element, node.RecommendationCandiate));
 
-                        // Nach rechts auswerten
-                        PatternRunner node = new PatternRunner(pattern, Direction.Right, element);
-                        if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Pattern #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
-                        if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0}, Pattern/Reverse #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
+                    // Nach links auswerten
+                    node = new PatternRunner(pattern, Direction.Left, element);
+                    if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Vorschlag: {1}", element, node.RecommendationCandiate));
+                    if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0} (Reverse), Vorschlag: {1}", element, node.RecommendationCandiate));
 
-                        // Nach links auswerten
-                        node = new PatternRunner(pattern, Direction.Left, element);
-                        if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Pattern #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
-                        if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0}, Pattern/Reverse #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
+                    // Nach oben auswerten
+                    node = new PatternRunner(pattern, Direction.Up, element);
+                    if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Vorschlag: {1}", element, node.RecommendationCandiate));
+                    if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0} (Reverse), Vorschlag: {1}", element, node.RecommendationCandiate));
 
-                        // Nach oben auswerten
-                        node = new PatternRunner(pattern, Direction.Up, element);
-                        if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Pattern #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
-                        if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0}, Pattern/Reverse #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
-
-                        // Nach unten auswerten
-                        node = new PatternRunner(pattern, Direction.Down, element);
-                        if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Pattern #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
-                        if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0}, Pattern/Reverse #{1}, Vorschlag: {2}", element, n, node.RecommendationCandiate));
-                    }
+                    // Nach unten auswerten
+                    node = new PatternRunner(pattern, Direction.Down, element);
+                    if (node.EvaluateTree()) Trace.WriteLine(string.Format("Match {0}, Vorschlag: {1}", element, node.RecommendationCandiate));
+                    if (node.EvaluateTree(true)) Trace.WriteLine(string.Format("Match {0} (Reverse), Vorschlag: {1}", element, node.RecommendationCandiate));
                 }
             }
+        }
+
+        /// <summary>
+        /// Testet das XXOX-Muster
+        /// </summary>
+        [Test]
+        public void TestXXOXPattern()
+        {
+            Trace.WriteLine("Teste XXOX-Muster");
+            EvaluateBoard(DefineSimplePattern.CreateXXOXPattern());
+        }
+
+        /// <summary>
+        /// Testet das XXO-Muster
+        /// </summary>
+        [Test]
+        public void TestXXOPattern()
+        {
+            Trace.WriteLine("Teste XXO-Muster");
+            EvaluateBoard(DefineSimplePattern.CreateXXOPattern());
         }
     }
 }

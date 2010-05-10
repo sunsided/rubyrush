@@ -1,6 +1,7 @@
 ﻿// ID $Id$
 
 using NUnit.Framework;
+using RubyElement;
 using RubyLogic;
 
 namespace UnitTests

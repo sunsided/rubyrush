@@ -2,7 +2,7 @@
 
 using System;
 
-namespace RubyLogic
+namespace RubyElement
 {
     /// <summary>
     /// Bewegungsrichtung
@@ -52,6 +52,27 @@ namespace RubyLogic
                     return Direction.Right;
                 case Direction.Right:
                     return Direction.Left;
+                default:
+                    throw new ArgumentException("direction");
+            }
+        }
+
+        /// <summary>
+        /// Ermittelt die waagerechte Richtung
+        /// </summary>
+        /// <param name="direction">Die Richtung</param>
+        /// <param name="option">Gibt an, ob das erste oder das zweite Ergebnis geliefert werden soll</param>
+        /// <returns>Die entgegengesetzte Richtung</returns>
+        public static Direction GetPerpendicular(this Direction direction, Option option)
+        {
+            switch (direction)
+            {
+                case Direction.Up:
+                case Direction.Down:
+                    return option == Option.First ? Direction.Left : Direction.Right;
+                case Direction.Left:
+                case Direction.Right:
+                    return option == Option.First ? Direction.Up : Direction.Down;
                 default:
                     throw new ArgumentException("direction");
             }

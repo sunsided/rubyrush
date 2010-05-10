@@ -51,6 +51,27 @@ namespace RubyLogic.PatternTree
         }
 
         /// <summary>
+        /// Schwache Referenz auf den Vorgängerknoten
+        /// </summary>
+        private WeakReference _perpendicularPrevNode;
+
+        /// <summary>
+        /// Der Vorgängerknoten in waagerechter Richtung
+        /// </summary>
+        public PatternNode PrevNodePerpendicular
+        {
+            [Pure]
+            get
+            {
+                return _perpendicularPrevNode != null ? _perpendicularPrevNode.Target as PatternNode : null;
+            }
+            private set
+            {
+                _perpendicularPrevNode = new WeakReference(value);
+            }
+        }
+
+        /// <summary>
         /// Der nächste Knoten in waagerechter Richtung (auf die aktuelle Achse)
         /// </summary>
         public PatternNode PerpendicularNode { get; private set; }
@@ -126,7 +147,7 @@ namespace RubyLogic.PatternTree
         {
             PatternNode node = new PatternNode { TestFunction = testFunction };
             PerpendicularNode = node;
-            node.PrevNode = this;
+            node.PrevNodePerpendicular = this;
             return node;
         }
 
@@ -138,7 +159,7 @@ namespace RubyLogic.PatternTree
         {
             PatternNode current = this;
             while (current.PrevNode != null) current = current.PrevNode;
-            return current;
+            return current.PrevNodePerpendicular ?? current;
         }
     }
 }
