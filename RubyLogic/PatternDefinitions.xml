@@ -4,25 +4,25 @@
     <Match type="equality" />
     <Match type="equality" />
     <Match type="inequality"/>
-    <Match type="equality" isCandidate="true" />
+    <Match type="equality" candidateType="backward" />
   </Pattern>
 
   <Pattern rank="1" name="XXO">
     <Match type="equality" />
     <Match type="equality" />
     <Match type="inequality">
-      <Pattern>
-        <Match type="equality" isCandidate="true" />
-      </Pattern>
+      <SubPattern>
+        <Match type="equality" candidateType="backward" />
+      </SubPattern>
     </Match>
   </Pattern>
 
   <Pattern rank="1" name="XOX" isSymmetric="true">
     <Match type="equality" />
     <Match type="inequality">
-      <Pattern>
-        <Match type="equality" isCandidate="true" />
-      </Pattern>
+      <SubPattern>
+        <Match type="equality" candidateType="backward" />
+      </SubPattern>
     </Match>
     <Match type="equality" />
   </Pattern>
@@ -31,9 +31,9 @@
     <Match type="equality" />
     <Match type="equality" />
     <Match type="inequality">
-      <Pattern>
-        <Match type="equality" isCandidate="true" />
-      </Pattern>
+      <SubPattern>
+        <Match type="equality" candidateType="backward" />
+      </SubPattern>
     </Match>
     <Match type="equality" />
   </Pattern>
@@ -42,9 +42,9 @@
     <Match type="equality" />
     <Match type="equality" />
     <Match type="inequality">
-      <Pattern>
-        <Match type="equality" isCandidate="true" />
-      </Pattern>
+      <SubPattern>
+        <Match type="equality" candidateType="backward" />
+      </SubPattern>
     </Match>
     <Match type="equality" />
     <Match type="equality" />
@@ -54,27 +54,27 @@
     <Match type="equality" />
     <Match type="equality" />
     <Match type="inequality">
-      <Pattern>
+      <SubPattern>
         <Match type="equality" />
         <Match type="equality" />
-      </Pattern>
+      </SubPattern>
     </Match>
-    <Match type="equality" isCandidate="true" />
+    <Match type="equality" candidateType="backward" />
   </Pattern>
 
   <Pattern rank="100" name="XXOXX-Cross">
     <Match type="equality" />
     <Match type="equality" />
     <Match type="inequality">
-      <Pattern>
+      <SubPattern>
         <Match type="equality" />
         <Match type="equality" />
-      </Pattern>
-      <Pattern>
+      </SubPattern>
+      <SubPattern>
         <Match type="equality" />
         <Match type="equality" />
-      </Pattern>
+      </SubPattern>
     </Match>
-    <Match type="equality" isCandidate="true" />
+    <Match type="equality" candidateType="backward" />
   </Pattern>
 </PatternDefinitions>

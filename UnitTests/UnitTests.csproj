@@ -48,6 +48,7 @@
     <Compile Include="PatternEvaluationTest.cs" />
     <Compile Include="RecommendationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlDefinitionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RubyElement\RubyElement.csproj">

@@ -16,17 +16,26 @@
       <xsd:sequence>
         <xsd:element ref="ruby:Match" minOccurs="1" maxOccurs="unbounded" />
       </xsd:sequence>
-      <xsd:attribute name="rank" default="1" type="xsd:positiveInteger" />
+      <xsd:attribute name="rank" use="required" type="xsd:positiveInteger" />
       <xsd:attribute name="name" default="" type="xsd:string" />
       <xsd:attribute name="isSymmetric" default="false" type="xsd:boolean" />
     </xsd:complexType>  
+  </xsd:element>
+
+  <!-- pattern definition -->
+  <xsd:element name="SubPattern">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="ruby:Match" minOccurs="1" maxOccurs="unbounded" />
+      </xsd:sequence>
+    </xsd:complexType>
   </xsd:element>
 
   <!-- match definition -->
   <xsd:element name="Match">
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element ref="ruby:Pattern" minOccurs="0" maxOccurs="2" />
+        <xsd:element ref="ruby:SubPattern" minOccurs="0" maxOccurs="2" />
       </xsd:sequence>
       <xsd:attribute name="type" default="equality">
         <xsd:simpleType>
@@ -36,7 +45,15 @@
           </xsd:restriction>
         </xsd:simpleType>
       </xsd:attribute>
-      <xsd:attribute name="isCandidate" default="false" type="xsd:boolean" />
+      <xsd:attribute name="candidateType" default="none">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="none" />
+            <xsd:enumeration value="backward" />
+            <xsd:enumeration value="forward" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
     </xsd:complexType>
   </xsd:element>
   
