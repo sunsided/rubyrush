@@ -19,6 +19,7 @@ namespace UnitTests
         {
             IList<Pattern> pattern = PatternImport.LoadFromXml(new FileInfo("PatternDefinitions.xml"));
             Assert.IsNotNull(pattern);
+            Assert.Greater(pattern.Count, 0);
         }
     }
 }
