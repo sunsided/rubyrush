@@ -9,7 +9,7 @@ using System.Linq;
 using NUnit.Framework;
 using RubyElement;
 using RubyLogic;
-using RubyLogic.PatternDefinitions;
+using RubyLogic.PatternDefinition;
 using RubyLogic.PatternTree;
 
 namespace UnitTests

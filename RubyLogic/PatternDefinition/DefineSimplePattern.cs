@@ -2,7 +2,7 @@
 
 using RubyLogic.PatternTree;
 
-namespace RubyLogic.PatternDefinitions
+namespace RubyLogic.PatternDefinition
 {
     /// <summary>
     /// Das einfachste Pattern.

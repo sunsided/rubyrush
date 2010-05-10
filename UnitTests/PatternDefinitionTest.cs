@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
 using RubyLogic;
-using RubyLogic.PatternDefinitions;
+using RubyLogic.PatternDefinition;
 using RubyLogic.PatternTree;
 
 namespace UnitTests

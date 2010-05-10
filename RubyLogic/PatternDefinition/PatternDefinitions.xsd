@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xsd:schema version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ruby="urn:RubyRush:PatternDefinition:1.0" targetNamespace="urn:RubyRush:PatternDefinition:1.0">
+  
+  <!-- root element -->
+  <xsd:element name="PatternDefinitions">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="ruby:Pattern" minOccurs="0" maxOccurs="unbounded" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <!-- pattern definition -->
+  <xsd:element name="Pattern">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="ruby:Match" minOccurs="1" maxOccurs="unbounded" />
+      </xsd:sequence>
+      <xsd:attribute name="rank" default="1" type="xsd:positiveInteger" />
+      <xsd:attribute name="name" default="" type="xsd:string" />
+      <xsd:attribute name="isSymmetric" default="false" type="xsd:boolean" />
+    </xsd:complexType>  
+  </xsd:element>
+
+  <!-- match definition -->
+  <xsd:element name="Match">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="ruby:Pattern" minOccurs="0" maxOccurs="2" />
+      </xsd:sequence>
+      <xsd:attribute name="type" default="equality">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="equality" />
+            <xsd:enumeration value="inequality" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
+      <xsd:attribute name="isCandidate" default="false" type="xsd:boolean" />
+    </xsd:complexType>
+  </xsd:element>
+  
+</xsd:schema>

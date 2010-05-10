@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PatternDefinitions xmlns="urn:RubyRush:PatternDefinition:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:RubyRush:PatternDefinition:1.0 PatternDefinitions.xsd">
+  <Pattern rank="1" name="XXOX">
+    <Match type="equality" />
+    <Match type="equality" />
+    <Match type="inequality"/>
+    <Match type="equality" isCandidate="true" />
+  </Pattern>
+
+  <Pattern rank="1" name="XXO">
+    <Match type="equality" />
+    <Match type="equality" />
+    <Match type="inequality">
+      <Pattern>
+        <Match type="equality" isCandidate="true" />
+      </Pattern>
+    </Match>
+  </Pattern>
+
+  <Pattern rank="1" name="XOX" isSymmetric="true">
+    <Match type="equality" />
+    <Match type="inequality">
+      <Pattern>
+        <Match type="equality" isCandidate="true" />
+      </Pattern>
+    </Match>
+    <Match type="equality" />
+  </Pattern>
+
+  <Pattern rank="4" name="XXOX2">
+    <Match type="equality" />
+    <Match type="equality" />
+    <Match type="inequality">
+      <Pattern>
+        <Match type="equality" isCandidate="true" />
+      </Pattern>
+    </Match>
+    <Match type="equality" />
+  </Pattern>
+
+  <Pattern rank="7" name="XXOXX-Bomb">
+    <Match type="equality" />
+    <Match type="equality" />
+    <Match type="inequality">
+      <Pattern>
+        <Match type="equality" isCandidate="true" />
+      </Pattern>
+    </Match>
+    <Match type="equality" />
+    <Match type="equality" />
+  </Pattern>
+
+  <Pattern rank="6" name="XXOX-Cross">
+    <Match type="equality" />
+    <Match type="equality" />
+    <Match type="inequality">
+      <Pattern>
+        <Match type="equality" />
+        <Match type="equality" />
+      </Pattern>
+    </Match>
+    <Match type="equality" isCandidate="true" />
+  </Pattern>
+
+  <Pattern rank="100" name="XXOXX-Cross">
+    <Match type="equality" />
+    <Match type="equality" />
+    <Match type="inequality">
+      <Pattern>
+        <Match type="equality" />
+        <Match type="equality" />
+      </Pattern>
+      <Pattern>
+        <Match type="equality" />
+        <Match type="equality" />
+      </Pattern>
+    </Match>
+    <Match type="equality" isCandidate="true" />
+  </Pattern>
+</PatternDefinitions>

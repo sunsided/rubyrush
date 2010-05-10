@@ -2,7 +2,7 @@
 
 using RubyLogic.PatternTree;
 
-namespace RubyLogic.PatternDefinitions
+namespace RubyLogic.PatternDefinition
 {
     /// <summary>
     /// Das einfachste Pattern.
@@ -67,7 +67,7 @@ namespace RubyLogic.PatternDefinitions
         /// 
         /// </summary>
         /// <returns></returns>
-        [PatternDefinition(6, "XXOXX-Cross")]
+        [PatternDefinition(6, "XXOX-Cross")]
         public static PatternNode CreateXXOXXCrossPattern()
         {
             return new PatternNode(PatternTest.Equality)
