@@ -97,7 +97,7 @@ namespace RubyElement
         public int SpaceRight
         {
             [Pure]
-            get { return ParentXIndex - Parent.ElementCountX - 1; }
+            get { return Parent.ElementCountX - 1 - ParentXIndex; }
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿// ID $Id$
 
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using RubyElement;
 
@@ -135,8 +136,29 @@ namespace RubyLogic.PatternTree
             // Baum auswerten
             while(node != null)
             {
+                // TODO: waagerechte Elemente auswerten
                 if (!node.TestFunction(this, StartElement.Color, element)) return false;
+
+                // Nächsten Knoten wählen
                 node = node.NextNode;
+
+                // Nächstes Element wählen
+                switch (MoveDirection)
+                {
+                    case Direction.Up:
+                        element = element.TopNeighbour;
+                        break;
+                    case Direction.Down:
+                        element = element.BottomNeighbour;
+                        break;
+                    case Direction.Left:
+                        element = element.LeftNeighbour;
+                        break;
+                    case Direction.Right:
+                        element = element.RightNeighbour;
+                        break;
+                }
+                Debug.Assert(element != null, "Element war null, obwohl der eingehende Test genügend Bewegungsfreiraum ermittelt hat.");
             }
             return true;
         }

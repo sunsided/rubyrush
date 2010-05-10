@@ -1,5 +1,6 @@
 ﻿// ID $Id$
 
+using System;
 using System.Diagnostics.Contracts;
 
 namespace RubyLogic.PatternTree
@@ -21,12 +22,33 @@ namespace RubyLogic.PatternTree
         /// <summary>
         /// Die Testfunktion
         /// </summary>
-        public PatternTest.TestDelegate TestFunction { get; set; }
+        public PatternTest.TestDelegate TestFunction { [Pure] get; set; }
 
         /// <summary>
         /// Der nächste Knoten
         /// </summary>
-        public PatternNode NextNode { get; private set; }
+        public PatternNode NextNode { [Pure] get; private set; }
+
+        /// <summary>
+        /// Schwache Referenz auf den Vorgängerknoten
+        /// </summary>
+        private WeakReference _prevNode;
+
+        /// <summary>
+        /// Der Vorgängerknoten
+        /// </summary>
+        public PatternNode PrevNode
+        {
+            [Pure]
+            get
+            {
+                return _prevNode != null ? _prevNode.Target as PatternNode : null;
+            }
+            private set
+            {
+                _prevNode = new WeakReference(value);
+            }
+        }
 
         /// <summary>
         /// Der nächste Knoten in waagerechter Richtung (auf die aktuelle Achse)
@@ -58,6 +80,18 @@ namespace RubyLogic.PatternTree
         }
 
         /// <summary>
+        /// Gibt an, ob dieses der erste Knoten ist
+        /// </summary>
+        public bool IsFirstNode
+        {
+            [Pure]
+            get
+            {
+                return PrevNode == null;
+            }
+        }
+
+        /// <summary>
         /// Ermittelt die Länge der Musterkette
         /// </summary>
         public int ChainLength
@@ -79,6 +113,7 @@ namespace RubyLogic.PatternTree
         {
             PatternNode node = new PatternNode {TestFunction = testFunction};
             NextNode = node;
+            node.PrevNode = this;
             return node;
         }
 
@@ -91,7 +126,19 @@ namespace RubyLogic.PatternTree
         {
             PatternNode node = new PatternNode { TestFunction = testFunction };
             PerpendicularNode = node;
+            node.PrevNode = this;
             return node;
+        }
+
+        /// <summary>
+        /// Signalisiert das Ende einer Kette und liefert den Beginn der Kette zurück.
+        /// </summary>
+        /// <returns><see cref="PatternNode"/>, der den Anfang der Kette darstellt.</returns>
+        public PatternNode EndChain()
+        {
+            PatternNode current = this;
+            while (current.PrevNode != null) current = current.PrevNode;
+            return current;
         }
     }
 }

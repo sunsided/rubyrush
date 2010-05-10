@@ -10,7 +10,7 @@ namespace RubyLogic
     /// <summary>
     /// Ein Attribut
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class PatternDefinitionAttribute : Attribute
     {
         /// <summary>
@@ -28,6 +28,10 @@ namespace RubyLogic
             {
                 Type type = types[i];
 
+                // Auf Attribut testen
+                PatternDefinitionAttribute[] attributes = (PatternDefinitionAttribute[])type.GetCustomAttributes(typeof(PatternDefinitionAttribute), true);
+                if (attributes.Length == 0) continue;
+
                 // Methoden ermitteln
                 MethodInfo[] methods = type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic |
                                 BindingFlags.InvokeMethod);
@@ -36,7 +40,7 @@ namespace RubyLogic
                     MethodInfo method = methods[m];
 
                     // Auf Attribut testen
-                    PatternDefinitionAttribute[] attributes = (PatternDefinitionAttribute[])method.GetCustomAttributes(typeof(PatternDefinitionAttribute), true);
+                    attributes = (PatternDefinitionAttribute[])method.GetCustomAttributes(typeof(PatternDefinitionAttribute), true);
                     if (attributes.Length == 0) continue;
 
                     // Funktion auswerten
