@@ -14,6 +14,33 @@ namespace RubyLogic
     public sealed class PatternDefinitionAttribute : Attribute
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="PatternDefinitionAttribute"/> class.
+        /// </summary>
+        /// <param name="ranking">The ranking.</param>
+        /// <param name="description">The description.</param>
+        public PatternDefinitionAttribute(int ranking, string description = null, bool isSymmetric = false)
+        {
+            Ranking = ranking;
+            Description = description ?? String.Empty;
+            IsSymmetric = isSymmetric;
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Muster symmetrisch ist
+        /// </summary>
+        public bool IsSymmetric { get; private set; }
+
+        /// <summary>
+        /// Die Bewertung des Patterns. Je höher, desto besser.
+        /// </summary>
+        public int Ranking { get; private set; }
+
+        /// <summary>
+        /// Die Bezeichnung des Patterns.
+        /// </summary>
+        public string Description { get; private set; }
+
+        /// <summary>
         /// Findet alle Pattern-Definitionen in dieser Assembly
         /// </summary>
         /// <returns></returns>
@@ -29,8 +56,7 @@ namespace RubyLogic
                 Type type = types[i];
 
                 // Auf Attribut testen
-                PatternDefinitionAttribute[] attributes = (PatternDefinitionAttribute[])type.GetCustomAttributes(typeof(PatternDefinitionAttribute), true);
-                if (attributes.Length == 0) continue;
+                if(type.GetCustomAttributes(typeof(PatternProviderAttribute), true).Length == 0) continue;
 
                 // Methoden ermitteln
                 MethodInfo[] methods = type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic |
@@ -40,7 +66,7 @@ namespace RubyLogic
                     MethodInfo method = methods[m];
 
                     // Auf Attribut testen
-                    attributes = (PatternDefinitionAttribute[])method.GetCustomAttributes(typeof(PatternDefinitionAttribute), true);
+                    PatternDefinitionAttribute[] attributes = (PatternDefinitionAttribute[])method.GetCustomAttributes(typeof(PatternDefinitionAttribute), true);
                     if (attributes.Length == 0) continue;
 
                     // Funktion auswerten

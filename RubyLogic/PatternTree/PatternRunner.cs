@@ -46,6 +46,11 @@ namespace RubyLogic.PatternTree
         public Recommendation RecommendationCandiate { [Pure] get; private set; }
 
         /// <summary>
+        /// Gibt an, ob dieser Runner einen Vorschlag hat
+        /// </summary>
+        public bool HasRecommendation { [Pure] get { return RecommendationCandiate != null; } }
+
+        /// <summary>
         /// Liefert das nächste Element
         /// </summary>
         /// <param name="current">Das aktuelle Element</param>
@@ -172,7 +177,7 @@ namespace RubyLogic.PatternTree
                 }
 
                 // Nächsten Knoten wählen
-                if (node.IsLastNode) break;
+                if (reverse && node.IsFirstNode || !reverse && node.IsLastNode) break;
                 node = reverse ? node.PrevNode : node.NextNode;
 
                 // Nächstes Element wählen
@@ -181,7 +186,10 @@ namespace RubyLogic.PatternTree
             }
 
             // Ergebnis anpassen, wenn Reverse-Operation gewünscht ist
-            if(reverse && RecommendationCandiate != null) RecommendationCandiate.RevertDirection();
+            if(reverse && RecommendationCandiate != null && !RecommendationCandiate.IsFinal) RecommendationCandiate.RevertDirection();
+            
+            // Kandidat als endgültig markieren
+            if(RecommendationCandiate != null) RecommendationCandiate.MakeFinal();
 
             return true;
         }

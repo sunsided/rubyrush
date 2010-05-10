@@ -139,6 +139,18 @@ namespace RubyLogic.PatternTree
         }
 
         /// <summary>
+        /// Erzeugt einen Kindknoten
+        /// </summary>
+        /// <param name="node">Der zu verwendende Knoten</param>
+        /// <returns></returns>
+        public PatternNode AppendSimpleNode(PatternNode node)
+        {
+            NextNode = node;
+            node.PrevNode = this;
+            return node;
+        }
+
+        /// <summary>
         /// Erzeugt einen Kindknoten in waagerechter Richtung auf die aktuelle Achse
         /// </summary>
         /// <param name="testFunction">Die zu verwendende Testfunktion</param>
@@ -146,6 +158,18 @@ namespace RubyLogic.PatternTree
         public PatternNode AppendPerpendicularNode(PatternTest.TestDelegate testFunction = null)
         {
             PatternNode node = new PatternNode { TestFunction = testFunction };
+            PerpendicularNode = node;
+            node.PrevNodePerpendicular = this;
+            return node;
+        }
+
+        /// <summary>
+        /// Erzeugt einen Kindknoten in waagerechter Richtung auf die aktuelle Achse
+        /// </summary>
+        /// <param name="node">Der zu verwendende Knoten</param>
+        /// <returns></returns>
+        public PatternNode AppendPerpendicularNode(PatternNode node)
+        {
             PerpendicularNode = node;
             node.PrevNodePerpendicular = this;
             return node;

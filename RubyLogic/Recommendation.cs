@@ -33,6 +33,19 @@ namespace RubyLogic
         public Direction Move { [Pure] get; private set; }
 
         /// <summary>
+        /// Gibt an, ob der Vorschlag endgültig ist
+        /// </summary>
+        public bool IsFinal { [Pure] get; private set; }
+
+        /// <summary>
+        /// Macht einen Vorschlag endgültig
+        /// </summary>
+        public void MakeFinal()
+        {
+            IsFinal = true;
+        }
+
+        /// <summary>
         /// Kehrt die Bewegungsrichtung um, z.B. bei Revers-Auswertung eines Musters
         /// </summary>
         internal void RevertDirection()
