@@ -16,6 +16,8 @@ namespace RubyLogic
     /// </summary>
     public class ContinuousBoardEvaluator : BackgroundWorker
     {
+        private static readonly Random Randomizer = new Random();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ContinuousBoardEvaluator"/> class.
         /// </summary>
@@ -168,9 +170,10 @@ namespace RubyLogic
 
                 // Nach Punktzahl sortieren
                 Recommendations = unoptimizedRecommendations.ToList();
+                //if (Recommendations.Count == 0) Recommendations = totalRecommendations;
 
                 InvokeBoardEvaluated(EventArgs.Empty);
-                Thread.Sleep(50);
+                Thread.Sleep(125);
             }
         }
     }

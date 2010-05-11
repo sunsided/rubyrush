@@ -8,16 +8,16 @@ namespace RubyImageCapture
     /// Size-Struktur
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    internal struct Size
+    public struct User32Point
     {
         /// <summary>
         /// Breite
         /// </summary>
-        public int Cx;
+        public int X;
 
         /// <summary>
         /// Höhe
         /// </summary>
-        public int Cy;
+        public int Y;
     }
 }

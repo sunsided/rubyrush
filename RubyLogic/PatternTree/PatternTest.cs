@@ -31,6 +31,18 @@ namespace RubyLogic.PatternTree
         }
 
         /// <summary>
+        /// Ermittelt, ob ein Element irrelevant ist
+        /// </summary>
+        /// <param name="runner">Der <see cref="PatternRunner"/>, der die Auswertung steuert</param>
+        /// <param name="stoneColor">Die Zielfarbe</param>
+        /// <param name="element">Das aktuelle Element</param>
+        /// <returns><c>true</c>, wenn die Bedingung erfüllt ist, ansonsten <c>false</c></returns>
+        public static bool Invariant(PatternRunner runner, StoneColor stoneColor, Element element)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Ermittelt, ob ein Element gleich der Testfarbe ist
         /// </summary>
         /// <param name="runner">Der <see cref="PatternRunner"/>, der die Auswertung steuert</param>

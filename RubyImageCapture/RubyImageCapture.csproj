@@ -45,6 +45,7 @@
     <Compile Include="ContinuousScreenGrabber.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="User32Point.cs" />
     <Compile Include="PlatformInvokeGDI32.cs" />
     <Compile Include="PlatformInvokeUser32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

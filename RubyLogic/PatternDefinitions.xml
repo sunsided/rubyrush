@@ -3,14 +3,14 @@
   <Pattern rank="1" name="XXOX">
     <Match type="equality" />
     <Match type="equality" />
-    <Match type="inequality"/>
+    <Match type="invariant"/>
     <Match type="equality" candidateType="backward" />
   </Pattern>
 
   <Pattern rank="1" name="XXO">
     <Match type="equality" />
     <Match type="equality" />
-    <Match type="inequality">
+    <Match type="invariant">
       <SubPattern>
         <Match type="equality" candidateType="backward" />
       </SubPattern>
@@ -19,7 +19,7 @@
 
   <Pattern rank="1" name="XOX" isSymmetric="true">
     <Match type="equality" />
-    <Match type="inequality">
+    <Match type="invariant">
       <SubPattern>
         <Match type="equality" candidateType="backward" />
       </SubPattern>
@@ -30,7 +30,7 @@
   <Pattern rank="4" name="XXOX2">
     <Match type="equality" />
     <Match type="equality" />
-    <Match type="inequality">
+    <Match type="invariant">
       <SubPattern>
         <Match type="equality" candidateType="backward" />
       </SubPattern>
@@ -41,7 +41,7 @@
   <Pattern rank="7" name="XXOXX-Bomb">
     <Match type="equality" />
     <Match type="equality" />
-    <Match type="inequality">
+    <Match type="invariant">
       <SubPattern>
         <Match type="equality" candidateType="backward" />
       </SubPattern>
@@ -53,7 +53,7 @@
   <Pattern rank="6" name="XXOX-Cross">
     <Match type="equality" />
     <Match type="equality" />
-    <Match type="inequality">
+    <Match type="invariant">
       <SubPattern>
         <Match type="equality" />
         <Match type="equality" />
@@ -65,7 +65,7 @@
   <Pattern rank="100" name="XXOXX-Cross">
     <Match type="equality" />
     <Match type="equality" />
-    <Match type="inequality">
+    <Match type="invariant">
       <SubPattern>
         <Match type="equality" />
         <Match type="equality" />

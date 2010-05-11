@@ -10,7 +10,7 @@ namespace Ruby_Rush
         public SelectionForm()
         {
             InitializeComponent();
-            SetTopLevel(true);
+            TopMost = true;
         }
 
         /// <summary>

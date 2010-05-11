@@ -178,6 +178,11 @@ namespace RubyLogic.PatternDefinition
                         function = PatternTest.Inequality;
                         break;
                     }
+                case "invariant":
+                    {
+                        function = PatternTest.Invariant;
+                        break;
+                    }
                 default:
                     {
                         throw new InvalidOperationException("Unbekannter type: " + type);

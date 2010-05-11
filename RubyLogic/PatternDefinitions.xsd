@@ -42,6 +42,7 @@
           <xsd:restriction base="xsd:NMTOKEN">
             <xsd:enumeration value="equality" />
             <xsd:enumeration value="inequality" />
+            <xsd:enumeration value="invariant" />
           </xsd:restriction>
         </xsd:simpleType>
       </xsd:attribute>
