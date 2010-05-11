@@ -106,6 +106,10 @@
       <Project>{FCBE6003-FF76-4AC1-95DC-7AD6BCB58BBF}</Project>
       <Name>RubyImageInterpretation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RubyLogic\RubyLogic.csproj">
+      <Project>{FBE9B1E9-6AE6-45F3-AA00-3F28E30DA184}</Project>
+      <Name>RubyLogic</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />

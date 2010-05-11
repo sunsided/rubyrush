@@ -1,8 +1,14 @@
 ﻿// ID $Id$
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using RubyImageCapture;
+using RubyImageInterpretation;
+using RubyLogic;
+using RubyLogic.PatternDefinition;
 
 namespace Ruby_Rush
 {
@@ -11,7 +17,12 @@ namespace Ruby_Rush
         /// <summary>
         /// Der verwendete Screengrabber
         /// </summary>
-        internal static ContinuousScreenGrabber Grabber = new ContinuousScreenGrabber();
+        internal static readonly ContinuousScreenGrabber Grabber = new ContinuousScreenGrabber();
+
+        /// <summary>
+        /// Der Evaluator
+        /// </summary>
+        internal static ContinuousBoardEvaluator Evaluator { get; private set; }
 
         /// <summary>
         /// Anzahl der Steine in X-Richtung
@@ -23,8 +34,17 @@ namespace Ruby_Rush
         /// </summary>
         internal const int ElementCountY = 8;
 
+        /// <summary>
+        /// Der Default-Name der Musterdatei
+        /// </summary>
+        internal const string DefaultPatternFile = "PatternDefinitions.xml";
 
         /// <summary>
+        /// Die Liste der Muster
+        /// </summary>
+        internal static IList<Pattern> Pattern { get; private set; }
+
+            /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
@@ -32,7 +52,37 @@ namespace Ruby_Rush
         {
             try
             {
-                // Den Worker starten
+                // Muster laden
+                try
+                {
+                    if (File.Exists(DefaultPatternFile))
+                    {
+                        Pattern = PatternImport.LoadFromXml(new FileInfo(DefaultPatternFile));
+                    }
+                }
+                catch(Exception ex)
+                {
+                    // Fehler anzeigen und Prozess ggf. beenden
+                    if(DialogResult.Cancel == MessageBox.Show(
+                        "Ein Ausnahmefehler ist beim Laden der Musterdatei aufgetreten:" + Environment.NewLine + ex.Message, 
+                        "Laden der Musterdatei", MessageBoxButtons.OKCancel, MessageBoxIcon.Error))
+                    {
+                        return;
+                    }
+                }
+
+                // Interne Muster laden, falls XML-Datei nicht gefunden wurde
+                if(Pattern == null || Pattern.Count == 0)
+                {
+                    Pattern = PatternDefinitionAttribute.GetPatternDefinitions();
+                }
+
+                // Hinweis ausgeben
+                Trace.WriteLine(Pattern.Count + " Muster geladen.");
+                Evaluator = new ContinuousBoardEvaluator(Pattern);
+
+                // Worker starten
+                Evaluator.RunWorkerAsync();
                 Grabber.RunWorkerAsync();
 
                 // Die Form anzeigen
@@ -42,7 +92,8 @@ namespace Ruby_Rush
             }
             finally
             {
-                // Den Grabber abschießen
+                // Die Worker abschießen
+                Evaluator.CancelAsync();
                 Grabber.CancelAsync();
             }
         }

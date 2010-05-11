@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContinuousBoardEvaluator.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Pattern.cs" />
     <Compile Include="PatternDefinition\DefineComplexPattern.cs" />
     <Compile Include="PatternDefinition\DefineSimplePattern.cs" />

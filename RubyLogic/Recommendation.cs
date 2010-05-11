@@ -38,6 +38,25 @@ namespace RubyLogic
         public bool IsFinal { [Pure] get; private set; }
 
         /// <summary>
+        /// Das Ranking
+        /// </summary>
+        public int Rank
+        {
+            [Pure]
+            get; private set;
+        }
+
+        /// <summary>
+        /// Setzt das Ranking
+        /// </summary>
+        /// <param name="rank">Das Ranking</param>
+        public Recommendation SetRank(int rank)
+        {
+            Rank = rank;
+            return this;
+        }
+
+        /// <summary>
         /// Macht einen Vorschlag endgültig
         /// </summary>
         public void MakeFinal()
@@ -81,18 +100,22 @@ namespace RubyLogic
             {
                 case Direction.Up:
                     countertest = (other.Move == Direction.Down) &&
+                                  (other.Element.ParentXIndex == Element.ParentXIndex) &&
                                   (other.Element.ParentYIndex == Element.ParentYIndex - 1);
                     break;
                 case Direction.Down:
                     countertest = (other.Move == Direction.Up) &&
+                                  (other.Element.ParentXIndex == Element.ParentXIndex) &&
                                   (other.Element.ParentYIndex == Element.ParentYIndex + 1);
                     break;
                 case Direction.Left:
                     countertest = (other.Move == Direction.Right) &&
+                                  (other.Element.ParentYIndex == Element.ParentYIndex) &&
                                   (other.Element.ParentXIndex == Element.ParentXIndex - 1);
                     break;
                 case Direction.Right:
                     countertest = (other.Move == Direction.Left) &&
+                                  (other.Element.ParentYIndex == Element.ParentYIndex) &&
                                   (other.Element.ParentXIndex == Element.ParentXIndex + 1);
                     break;
             }
@@ -108,7 +131,10 @@ namespace RubyLogic
         [Pure]
         public override int GetHashCode()
         {
-            return Element.GetHashCode() ^ (Move.GetHashCode() * 37);
+            return Element.Color.GetHashCode() * 7 ^ 
+                Element.ParentXIndex.GetHashCode() * 17 ^ 
+                Element.ParentYIndex.GetHashCode() ^ 
+                (Move.GetHashCode() * 37);
         }
 
         /// <summary>

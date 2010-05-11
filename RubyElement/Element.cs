@@ -282,5 +282,16 @@ namespace RubyElement
         {
             return string.Format("[{0}, {1}] {2}", ParentXIndex, ParentYIndex, Color);
         }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return Color.GetHashCode() ^ ParentXIndex.GetHashCode() ^ ParentYIndex.GetHashCode();
+        }
     }
 }

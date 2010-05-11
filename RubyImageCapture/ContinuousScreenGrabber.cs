@@ -1,5 +1,6 @@
 ﻿// ID $Id$
 
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -41,6 +42,11 @@ namespace RubyImageCapture
         public Bitmap CapturedImage { get; private set; }
 
         /// <summary>
+        /// Das bezogene Bild
+        /// </summary>
+        public Bitmap CapturedImageForScreen { get; private set; }
+
+        /// <summary>
         /// Holt die Aufnahme
         /// </summary>
         /// <remarks>Alias für <seealso cref="CapturedImage"/>.</remarks>
@@ -51,9 +57,34 @@ namespace RubyImageCapture
         }
 
         /// <summary>
+        /// Holt die Aufnahme
+        /// </summary>
+        /// <remarks>Alias für <seealso cref="CapturedImage"/>.</remarks>
+        /// <returns>Ein <see cref="Bitmap"/> mit dem Screenshot</returns>
+        public Bitmap GetCapturedImageForScreen()
+        {
+            return CapturedImageForScreen;
+        }
+
+        /// <summary>
         /// Anzahl der Bilder pro Sekunde
         /// </summary>
         public float FramesPerSecond { get; private set; }
+
+        /// <summary>
+        /// Event, das gerufen wird, wenn ein Frame aufgenommen wurde
+        /// </summary>
+        public event EventHandler FrameGrabbed;
+
+        /// <summary>
+        /// Invokes the frame grabbed event
+        /// </summary>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        public void InvokeFrameGrabbed(EventArgs e)
+        {
+            EventHandler handler = FrameGrabbed;
+            if (handler != null) handler.Invoke(this, e);
+        }
 
         /// <summary>
         /// Raises the <see cref="E:System.ComponentModel.BackgroundWorker.DoWork"/> event.
@@ -88,8 +119,13 @@ namespace RubyImageCapture
                     Bitmap bitmap = CaptureScreen.GetDesktopImage(capturePosition.Left, capturePosition.Top,
                                                                   capturePosition.Width, capturePosition.Height);
 
+                    // Bitmap holen
+                    Bitmap bitmap2 = new Bitmap(bitmap);
+
                     // Bitmap setzen
                     CapturedImage = bitmap;
+                    CapturedImageForScreen = bitmap2;
+                    InvokeFrameGrabbed(EventArgs.Empty);
 
                     // Pause machen
                     Thread.Sleep(50);

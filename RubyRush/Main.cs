@@ -1,12 +1,14 @@
 ﻿// ID $Id$
 
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using RubyElement;
+using RubyImageCapture;
 using RubyImageInterpretation;
+using RubyLogic;
 
 namespace Ruby_Rush
 {
@@ -26,6 +28,37 @@ namespace Ruby_Rush
             _rubyRange.Shown += RubyRangeShown;
 
             refreshTimer.Start();
+
+            Program.Grabber.FrameGrabbed += Grabber_FrameGrabbed;
+            Program.Evaluator.BoardEvaluated += Evaluator_BoardEvaluated;
+        }
+
+        /// <summary>
+        /// Handles the BoardEvaluated event of the Evaluator control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        void Evaluator_BoardEvaluated(object sender, EventArgs e)
+        {
+            _boardReady = true;
+            _moves = ((ContinuousBoardEvaluator) sender).Recommendations;
+        }
+
+        /// <summary>
+        /// Die Liste der Bewegungsempfehlungen
+        /// </summary>
+        private IList<Recommendation> _moves;
+
+        /// <summary>
+        /// Handles the FrameGrabbed event of the Grabber control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        void Grabber_FrameGrabbed(object sender, EventArgs e)
+        {
+            ContinuousScreenGrabber grabber = (ContinuousScreenGrabber) sender;
+            if (!BuildMap(grabber.GetCapturedImage())) return;
+            Program.Evaluator.Board = _board;
         }
 
         /// <summary>
@@ -79,7 +112,6 @@ namespace Ruby_Rush
         private void StartActionCascade()
         {
             if (!GetRangeBitmap()) return;
-            if (!BuildMap()) return;
             Invalidate();
         }
 
@@ -100,10 +132,14 @@ namespace Ruby_Rush
         private bool GetRangeBitmap()
         {
             _rawCapture = Program.Grabber.GetCapturedImage();
+            _rawCaptureForScreen = Program.Grabber.GetCapturedImageForScreen();
             if (_rawCapture == null) return false;
 
+            /*
             _rangeBitmap = ImageFilter.FilterBitmap(_rawCapture);
             return _rangeBitmap != null;
+             * */
+            return true;
         }
 
         /// <summary>
@@ -112,9 +148,16 @@ namespace Ruby_Rush
         private Bitmap _rawCapture;
 
         /// <summary>
+        /// Das Originalbild
+        /// </summary>
+        private Bitmap _rawCaptureForScreen;
+
+        /*
+        /// <summary>
         /// Das gefilterte Bild
         /// </summary>
         private Bitmap _rangeBitmap;
+        */
 
         /// <summary>
         /// Wird aufgerufen, wenn die Form gezeichnet wird
@@ -122,7 +165,7 @@ namespace Ruby_Rush
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"/> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            Bitmap source = _rawCapture;
+            Bitmap source = _rawCaptureForScreen;
             if (source == null) return;
             lock (source)
             {
@@ -161,10 +204,10 @@ namespace Ruby_Rush
                         gr.DrawLine(_gridPenSmall, _mouseDownLocation.X, y, _currentMouseLocation.X, y);
                     }
                 }
-                else if (_gridApplied)
+                else if (_gridApplied && _boardReady)
                 {
-                    float top = _topLeftItem.Y*(float) Height/_rawCapture.Height;
-                    float left = _topLeftItem.X*(float) Width/_rawCapture.Width;
+                    float top = _topLeftItem.Y*(float) Height/source.Height;
+                    float left = _topLeftItem.X*(float) Width/source.Width;
 
                     float width = Math.Abs(_bottomRightItem.X - _topLeftItem.X) * (float)Width / (source.Width);
                     float height = Math.Abs(_bottomRightItem.Y - _topLeftItem.Y) * (float)Height / (source.Height);
@@ -187,12 +230,29 @@ namespace Ruby_Rush
                         {
                             float xpos = widthSteps*x + left;
 
-                            Color color = _colorMap[x, y].StereotypeColor;
+                            Color color = _board[x, y].StereotypeColor;
                             Brush brush = new SolidBrush(color);
 
                             RectangleF rect = new RectangleF(xpos - halfSize, ypos - halfSize, size, size);
                             gr.DrawEllipse(new Pen(Color.White, 2.0F), rect);
                             gr.FillEllipse(brush, rect);
+                        }
+                    }
+
+                    // Bewegungsempfehlungen am Start? Zeichen!
+                    if (_moves != null && _moves.Count > 0)
+                    {
+                        for (int i = 0; i < 3; ++i)
+                        {
+
+                            Recommendation rec1 = _moves[i];
+                            int xIndex = rec1.Element.ParentXIndex;
+                            int yIndex = rec1.Element.ParentYIndex;
+
+                            float ypos = heightSteps * yIndex + top;
+                            float xpos = widthSteps * xIndex + left;
+
+                            gr.FillEllipse(new SolidBrush(Color.FromArgb(192, Color.Red)), xpos - 30, ypos - 30, 60, 60);
                         }
                     }
                 }
@@ -254,22 +314,22 @@ namespace Ruby_Rush
             base.OnMouseMove(e);
 
             // Kein Bild? --> Ende der Fahrt.
-            if (_rangeBitmap == null) return;
+            if (_rawCaptureForScreen == null) return;
 
             // Position merken
             _currentMouseLocation = e.Location;
             if (_inDragDrop) Invalidate();
 
             // Mausposition auf Bildgröße skalieren
-            int scaledX = e.X*_rangeBitmap.Width/ClientSize.Width;
-            int scaledY = e.Y*_rangeBitmap.Height/ClientSize.Height;
+            int scaledX = e.X * _rawCaptureForScreen.Width / ClientSize.Width;
+            int scaledY = e.Y * _rawCaptureForScreen.Height / ClientSize.Height;
 
             // Idiotentest
-            if (scaledX < 0 || scaledX >= _rangeBitmap.Width) return;
-            if (scaledY < 0 || scaledY >= _rangeBitmap.Height) return;
+            if (scaledX < 0 || scaledX >= _rawCaptureForScreen.Width) return;
+            if (scaledY < 0 || scaledY >= _rawCaptureForScreen.Height) return;
 
             // Farbe ermitteln
-            Color color = _rawCapture.GetPixel(scaledX, scaledY);
+            Color color = _rawCaptureForScreen.GetPixel(scaledX, scaledY);
             int lightness = (color.R + color.G + color.B)/3;
 
             // Farbe ausgeben
@@ -310,11 +370,11 @@ namespace Ruby_Rush
         protected override void OnMouseClick(MouseEventArgs e)
         {
             base.OnMouseClick(e);
-            if(e.Button == MouseButtons.Right)
+            if(e.Button == MouseButtons.Right && _gridApplied)
             {
                 Point p = GetIndexFromImageCoordinates(e.Location);
 
-                Element element = _colorMap[p.X, p.Y];
+                Element element = _board[p.X, p.Y];
 
                 StringBuilder builder = new StringBuilder();
                 builder.AppendLine("Element: " + element ?? "(keines!?)");
@@ -336,12 +396,12 @@ namespace Ruby_Rush
         private Point GetIndexFromImageCoordinates(Point imageCoordinates)
         {
             // Bildschirmkoordinaten zu Bildkoordinaten skalieren
-            float scaledX = (float)(imageCoordinates.X - _topLeftItem.X) * _rangeBitmap.Width / (ClientSize.Width - _topLeftItem.X);
-            float scaledY = (float)(imageCoordinates.Y - _topLeftItem.Y) * _rangeBitmap.Height / (ClientSize.Height - _topLeftItem.Y);
+            float scaledX = (float)(imageCoordinates.X - _topLeftItem.X) * _rawCaptureForScreen.Width / (ClientSize.Width - _topLeftItem.X);
+            float scaledY = (float)(imageCoordinates.Y - _topLeftItem.Y) * _rawCaptureForScreen.Height / (ClientSize.Height - _topLeftItem.Y);
 
             // Bildkoordinaten zu Indizes skalieren
-            int x = (int)Math.Round(scaledX * (Program.ElementCountX) / _rangeBitmap.Width);
-            int y = (int)Math.Round(scaledY * (Program.ElementCountY) / _rangeBitmap.Height);
+            int x = (int)Math.Round(scaledX * (Program.ElementCountX) / _rawCaptureForScreen.Width);
+            int y = (int)Math.Round(scaledY * (Program.ElementCountY) / _rawCaptureForScreen.Height);
 
             // Wertebereich eingrenzen
             x = Math.Max(Math.Min(Program.ElementCountX, x), 0);
@@ -366,11 +426,10 @@ namespace Ruby_Rush
             if(DialogResult.Yes == MessageBox.Show(this, "Raster übernehmen?", "Feldraster", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
             {
                 // TODO: na ja, oder andersrum ...
-                _topLeftItem = new Point(_mouseDownLocation.X * _rangeBitmap.Width / ClientSize.Width, _mouseDownLocation.Y * _rangeBitmap.Height / ClientSize.Height);
-                _bottomRightItem = new Point(_mouseUpLocation.X * _rangeBitmap.Width / ClientSize.Width, _mouseUpLocation.Y * _rangeBitmap.Height / ClientSize.Height);
+                _topLeftItem = new Point(_mouseDownLocation.X * _rawCaptureForScreen.Width / ClientSize.Width, _mouseDownLocation.Y * _rawCaptureForScreen.Height / ClientSize.Height);
+                _bottomRightItem = new Point(_mouseUpLocation.X * _rawCaptureForScreen.Width / ClientSize.Width, _mouseUpLocation.Y * _rawCaptureForScreen.Height / ClientSize.Height);
 
                 _gridApplied = true;
-                BuildMap();
             }
         }
 
@@ -394,7 +453,7 @@ namespace Ruby_Rush
         /// <summary>
         /// Die Steinkarte (in Farbe)
         /// </summary>
-        private Checkerboard _colorMap = new Checkerboard(Program.ElementCountX, Program.ElementCountY);
+        private Checkerboard _board = new Checkerboard(Program.ElementCountX, Program.ElementCountY);
 
         /// <summary>
         /// Gibt an, ob das Gitter angewandt wurde
@@ -402,16 +461,21 @@ namespace Ruby_Rush
         private bool _gridApplied;
 
         /// <summary>
+        /// Gibt an, ob das Gitter angewandt wurde
+        /// </summary>
+        private bool _boardReady;
+
+        /// <summary>
         /// Builds the map.
         /// </summary>
-        private bool BuildMap()
+        private bool BuildMap(Bitmap bitmap)
         {
-            if (_rawCapture == null) return false;
+            if (bitmap == null || !_gridApplied) return false;
 
             int width = Math.Abs(_bottomRightItem.X - _topLeftItem.X);
             int height = Math.Abs(_bottomRightItem.Y - _topLeftItem.Y);
 
-            _colorMap = GridGenerator.GenerateGrid(_rawCapture, _topLeftItem.X, _topLeftItem.Y, width, height, Program.ElementCountX, Program.ElementCountY);
+            _board = GridGenerator.GenerateGrid(bitmap, _topLeftItem.X, _topLeftItem.Y, width, height, Program.ElementCountX, Program.ElementCountY);
 
             // Allet klar.)
             return true;

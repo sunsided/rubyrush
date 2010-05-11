@@ -49,30 +49,30 @@ namespace RubyLogic
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        public IList<Recommendation> Evaluate(Element element)
+        public IEnumerable<Recommendation> Evaluate(Element element)
         {
             if (element == null) throw new ArgumentNullException("element");
             List<Recommendation> recommendations = new List<Recommendation>();
 
             // Nach rechts auswerten
             PatternRunner runner = new PatternRunner(RootNode, Direction.Right, element);
-            if (runner.EvaluateTree() && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate);
-            if (!IsSymmetric && runner.EvaluateTree(true) && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate);
+            if (runner.EvaluateTree() && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate.SetRank(Ranking));
+            if (!IsSymmetric && runner.EvaluateTree(true) && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate.SetRank(Ranking));
 
             // Nach links auswerten
             runner = new PatternRunner(RootNode, Direction.Left, element);
-            if (runner.EvaluateTree() && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate);
-            if (!IsSymmetric && runner.EvaluateTree(true) && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate);
+            if (runner.EvaluateTree() && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate.SetRank(Ranking));
+            if (!IsSymmetric && runner.EvaluateTree(true) && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate.SetRank(Ranking));
 
             // Nach oben auswerten
             runner = new PatternRunner(RootNode, Direction.Up, element);
-            if (runner.EvaluateTree() && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate);
-            if (!IsSymmetric && runner.EvaluateTree(true) && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate);
+            if (runner.EvaluateTree() && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate.SetRank(Ranking));
+            if (!IsSymmetric && runner.EvaluateTree(true) && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate.SetRank(Ranking));
 
             // Nach unten auswerten
             runner = new PatternRunner(RootNode, Direction.Down, element);
-            if (runner.EvaluateTree() && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate);
-            if (!IsSymmetric && runner.EvaluateTree(true) && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate);
+            if (runner.EvaluateTree() && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate.SetRank(Ranking));
+            if (!IsSymmetric && runner.EvaluateTree(true) && runner.HasRecommendation) recommendations.Add(runner.RecommendationCandiate.SetRank(Ranking));
 
             // Und raus
             return recommendations;

@@ -158,7 +158,7 @@ namespace UnitTests
                     for (int x = 0; x < ElementsX; ++x)
                     {
                         Element element = _board[x, y];
-                        IList<Recommendation> recs = pattern.Evaluate(element);
+                        IEnumerable<Recommendation> recs = pattern.Evaluate(element);
                         recommendations.AddRange(recs);
                     }
                 }
